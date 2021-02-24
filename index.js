@@ -98,6 +98,8 @@ async function requestListener(request, response) {
 
                                 // web result adding
                                 for (var c in res.results) {
+                                    var tit = res.results[c].title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                                    var desc = res.results[c].description.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                                     var chip = `
                                     <div class='resultContainer'>
                                         <div class='buttonColumn'>
@@ -110,12 +112,12 @@ async function requestListener(request, response) {
                                         </div>
                                         <a class='resLink' rel='noopener noreferrer' href='${res.results[c].url}'>
                                             <div class='result'>
-                                                <h2>${res.results[c].title}</h2>
+                                                <h2>${tit}</h2>
                                                 <div class='urlCont'>
                                                     <img class='favicon' src='/favicon/?link=${btoa(res.results[c].url)}'>
                                                     <h4>${res.results[c].url}</h4>
                                                 </div>
-                                                <p>${res.results[c].description}</p>
+                                                <p>${desc}</p>
                                             </div>
                                       </a>
                                     </div>`;
