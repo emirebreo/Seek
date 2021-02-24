@@ -50,15 +50,13 @@ async function requestListener(request, response) {
                     var object = {
                         url: scrapeUrl,
                         pageCount: 3,
-                        lang: l,
-                        enforceLanguage: true
+                        lang: l
                     }
                 } else {
                     var object =  {
                         q: url.query.q,
                         pageCount: 3,
-                        lang: l,
-                        enforceLanguage: true
+                        lang: l
                     }
                 }
                 bing.search(object, function(err, res) {
@@ -73,7 +71,7 @@ async function requestListener(request, response) {
                                 $("title").text("Results for \"" + url.query.q + "\" on Seekly");
 
                                 // main result adding
-                                if (res.qnaAnswer !== null) {
+                                if (res.qnaAnswer !== null && res.qnaAnswer.answer !== "") {
                                     var bChip = "<div class='qnaResult result'><p>" + res.qnaAnswer.answer + "</p><a class='resLink' href='" + res.qnaAnswer.source.url + "'><h2>" + res.qnaAnswer.source.title + "</h2><h4>" + res.qnaAnswer.source.url + "</h4></a></div>";
                                     $(".main").append(bChip);
                                 } else if (res.topAnswer !== null) {

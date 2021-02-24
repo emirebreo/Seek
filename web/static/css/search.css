@@ -88,6 +88,13 @@ body {
     font-size:16px;
 }
 
+.qnaResult h4, .topResult h4 {
+    white-space:nowrap;
+    overflow:hidden;
+    width:100% !important;
+    margin-left:0 !important;
+}
+
 .qnaResult p {
     font-size:20px;
     color:var(--secondary-text-color) !important;
