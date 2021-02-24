@@ -71,6 +71,15 @@ body {
 .result h4 {
     white-space:nowrap;
     overflow:hidden;
+    float:left;
+    min-width:calc(99% - 18px);
+    margin-left:5px;
+}
+
+.result .favicon {
+    width:18px;
+    height:18px;
+    float:left;
 }
 
 .result p {
