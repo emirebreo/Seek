@@ -100,7 +100,7 @@ async function requestListener(request, response) {
 
                                 // web result adding
                                 for (var c in res.results) {
-                                    var chip = "<a class='resLink' href='" + res.results[c].url + "'><div class='result'><h2>" + res.results[c].title + "</h2><img class='favicon' src='/favicon/?link=" + btoa(res.results[c].url) + "'><h4>" + res.results[c].url + "</h4><p>" + res.results[c].description + "</p></div></a>";
+                                    var chip = "<a class='resLink' href='" + res.results[c].url + "'><div class='result'><h2>" + res.results[c].title + "</h2><div class='urlCont'><img class='favicon' src='/favicon/?link=" + btoa(res.results[c].url) + "'><h4>" + res.results[c].url + "</h4></div><p>" + res.results[c].description + "</p></div></a>";
                                     $(".main").append(chip);
                                 }
 

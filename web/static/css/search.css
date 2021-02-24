@@ -72,7 +72,7 @@ body {
     white-space:nowrap;
     overflow:hidden;
     float:left;
-    min-width:calc(99% - 18px);
+    width:calc(99% - 18px);
     margin-left:5px;
 }
 
@@ -116,7 +116,7 @@ body {
 }
 
 .bottom {
-    margin-left:1%;
+    margin-left:10px;
     margin-bottom:1%;
 }
 
