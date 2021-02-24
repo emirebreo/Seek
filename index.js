@@ -57,7 +57,7 @@ function requestListener(request, response) {
                                 handleError(request, response, err);
                             } else {
                                 var $ = cheerio.load(resp);
-                                $("title").text(url.query.q + " on Wallaby");
+                                $("title").text(url.query.q + " on Seekly");
                                 if (res.qnaAnswer !== null) {
                                     var bChip = "<div class='qnaResult result'><p>" + res.qnaAnswer.answer + "</p><a class='resLink' href='" + res.qnaAnswer.source.url + "'><h2>" + res.qnaAnswer.source.title + "</h2><h4>" + res.qnaAnswer.source.url + "</h4></a></div>";
                                     $(".main").append(bChip);

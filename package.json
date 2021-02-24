@@ -1,5 +1,5 @@
 {
-  "name": "wallaby",
+  "name": "seekly",
   "version": "1.0.0",
   "description": "privacy oriented meta search engine",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/normanlol/wallaby.git"
+    "url": "git+https://github.com/normanlol/seekly.git"
   },
   "keywords": [
     "search",
@@ -18,9 +18,9 @@
   "author": "normanlol",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/normanlol/wallaby/issues"
+    "url": "https://github.com/normanlol/seekly/issues"
   },
-  "homepage": "https://github.com/normanlol/wallaby#readme",
+  "homepage": "https://github.com/normanlol/seekly#readme",
   "dependencies": {
     "bing-scraper": "^1.1.2",
     "cheerio": "^1.0.0-rc.5",
