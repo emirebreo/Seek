@@ -82,6 +82,7 @@ body {
     height:18px;
     float:left;
     border-radius:2px;
+    background-color:white;
 }
 
 .result p {
