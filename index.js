@@ -73,13 +73,13 @@ async function requestListener(request, response) {
 
                                 // main result adding
                                 if (res.qnaAnswer !== null && res.qnaAnswer.answer !== "") {
-                                    var bChip = "<div class='qnaResult result'><p>" + res.qnaAnswer.answer + "</p><a class='resLink' href='" + res.qnaAnswer.source.url + "'><h2>" + res.qnaAnswer.source.title + "</h2><h4>" + res.qnaAnswer.source.url + "</h4></a></div>";
+                                    var bChip = "<div class='qnaResult result'><p>" + res.qnaAnswer.answer.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p><a class='resLink' href='" + res.qnaAnswer.source.url + "'><h2>" + res.qnaAnswer.source.title.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</h2><h4>" + res.qnaAnswer.source.url + "</h4></a></div>";
                                     $(".main").append(bChip);
                                 } else if (res.topAnswer !== null) {
                                     if (res.topAnswer.image !== null) {
                                         var bChip = "<div class='topResult result'><img src='/proxy?url=" + btoa(res.topAnswer.image) + "'><div><h4>" + res.topAnswer.title + "</h4><h2>" + res.topAnswer.answer + "</h2><div></div>"
                                     } else {
-                                        var bChip = "<div class='topResult result'><h4>" + res.topAnswer.title + "</h4><h2>" + res.topAnswer.answer + "</h2></div>"
+                                        var bChip = "<div class='topResult result'><h4>" + res.topAnswer.title.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</h4><h2>" + res.topAnswer.answer.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</h2></div>"
                                     }
                                     $(".main").append(bChip);
                                 }
