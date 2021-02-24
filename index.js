@@ -100,23 +100,23 @@ async function requestListener(request, response) {
                                 for (var c in res.results) {
                                     var chip = `
                                     <div class='resultContainer'>
-                                      <div class='buttonColumn'>
-                                        <a rel='noopener noreferrer' href='proxy?url=${btoa(res.results[c].url)}'>
-                                            <img src='proxy.png' class='proxyImage'>
-                                        </a>
-                                        <a rel='noopener noreferrer' href='https://web.archive.org/*/${res.results[c].url}'>
-                                            <img src='back.png' class='proxyImage'>
-                                        </a>
-                                      </div>
-                                      <a class='resLink' rel='noopener noreferrer' href='${res.results[c].url}'>
-                                        <div class='result'>
-                                          <h2>${res.results[c].title}</h2>
-                                          <div class='urlCont'>
-                                            <img class='favicon' src='/favicon/?link=${btoa(res.results[c].url)}'>
-                                            <h4>${res.results[c].url}</h4>
-                                          </div>
-                                          <p>${res.results[c].description}</p>
+                                        <div class='buttonColumn'>
+                                            <a rel='noopener noreferrer' href='proxy?url=${btoa(res.results[c].url)}'>
+                                                <img src='proxy.png' class='proxyImage'>
+                                            </a>
+                                            <a rel='noopener noreferrer' href='https://web.archive.org/*/${res.results[c].url}'>
+                                                <img src='back.png' class='proxyImage'>
+                                            </a>
                                         </div>
+                                        <a class='resLink' rel='noopener noreferrer' href='${res.results[c].url}'>
+                                            <div class='result'>
+                                                <h2>${res.results[c].title}</h2>
+                                                <div class='urlCont'>
+                                                    <img class='favicon' src='/favicon/?link=${btoa(res.results[c].url)}'>
+                                                    <h4>${res.results[c].url}</h4>
+                                                </div>
+                                                <p>${res.results[c].description}</p>
+                                            </div>
                                       </a>
                                     </div>`;
                                     $(".main").append(chip);
