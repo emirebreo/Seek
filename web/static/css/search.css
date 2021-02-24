@@ -89,11 +89,19 @@ body {
     font-size:16px;
 }
 
+
 .proxyImage {
     width:18px;
     height:18px;
     float:right;
     border-radius:2px;
+    text-decoration:underline;
+    text-decoration-color:var(--text-color);
+}
+
+.result h2:hover, .result h4:hover {
+    text-decoration:underline;
+    text-decoration-color:var(--text-color);
 }
 
 .qnaResult h4, .topResult h4 {
@@ -102,6 +110,10 @@ body {
     width:100% !important;
     float:none !important;
     margin-left:0 !important;
+}
+
+.topResult h2:hover, .topResult h4:hover {
+    text-decoration:none;
 }
 
 .qnaResult p {
