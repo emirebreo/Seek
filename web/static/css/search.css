@@ -88,6 +88,13 @@ body {
     font-size:16px;
 }
 
+.proxyImage {
+    width:18px;
+    height:18px;
+    float:right;
+    border-radius:2px;
+}
+
 .qnaResult h4, .topResult h4 {
     white-space:nowrap;
     overflow:hidden;
