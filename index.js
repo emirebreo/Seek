@@ -147,11 +147,19 @@ function requestListener(request, response) {
             if (url.query.link) {
                 var host = parse(atob(url.query.link), true).host;
                 faviconUrl(host, {}, function(favicon) {
-                    response.writeHead(302, {
-                        "Access-Control-Allow-Origin": "*",
-                        "Location": "/proxy/" + btoa(favicon)
-                    })
-                    response.end();
+                    if (favicon !== null) {
+                        response.writeHead(302, {
+                            "Access-Control-Allow-Origin": "*",
+                            "Location": "/proxy/" + btoa(favicon)
+                        })
+                        response.end();
+                    } else {
+                        response.writeHead(302, {
+                            "Access-Control-Allow-Origin": "*",
+                            "Location": "/globe.png"
+                        })
+                        response.end();
+                    }
                 })
             } else {
                 response.writeHead(302, {
