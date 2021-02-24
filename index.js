@@ -90,7 +90,6 @@ async function requestListener(request, response) {
                                 } else {
                                     $("#more").remove();
                                 }
-
                                 if (res.prevHref !== null && url.query.scrape) {
                                     $("#prev").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.prevHref));
                                 } else {
@@ -101,15 +100,15 @@ async function requestListener(request, response) {
                                 for (var c in res.results) {
                                     var chip = `
                                     <div class='resultContainer'>
-                                      <div id='buttonColumn'>
-                                        <a href='proxy?url=${btoa(res.results[c].url)}'>
-                                          <img src='proxy.png' class='proxyImage'>
+                                      <div class='buttonColumn'>
+                                        <a rel='noopener noreferrer' href='proxy?url=${btoa(res.results[c].url)}'>
+                                            <img src='proxy.png' class='proxyImage'>
                                         </a>
-                                        <a href='https://web.archive.org/*/${res.results[c].url}'>
-                                          <img src='back.png' class='proxyImage'>
+                                        <a rel='noopener noreferrer' href='https://web.archive.org/*/${res.results[c].url}'>
+                                            <img src='back.png' class='proxyImage'>
                                         </a>
                                       </div>
-                                      <a class='resLink' href='${res.results[c].url}'>
+                                      <a class='resLink' rel='noopener noreferrer' href='${res.results[c].url}'>
                                         <div class='result'>
                                           <h2>${res.results[c].title}</h2>
                                           <div class='urlCont'>
