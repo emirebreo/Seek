@@ -161,7 +161,6 @@ async function requestListener(request, response) {
                 var host = parse(atob(url.query.link), true).host;
                 faviconUrl(host, {}, function(favicon) {
                     if (favicon !== null) {
-                        console.log(favicon)
                         response.writeHead(302, {
                             "Access-Control-Allow-Origin": "*",
                             "Location": "/proxy/?url=" + btoa(favicon)
