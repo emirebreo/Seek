@@ -44,7 +44,7 @@ async function requestListener(request, response) {
                 if (request.headers["accept-language"]) {var l = request.headers["accept-language"];}
                 else if (request.headers["Accept-Language"]) {var l = request.headers["Accept-Language"];}
                 else {var l = "en-US,en;q=0.5";}
-                
+
                 if (url.query.scrape) {
                     var scrapeUrl = atob(url.query.scrape);
                     var object = {
@@ -70,7 +70,7 @@ async function requestListener(request, response) {
                                 handleError(request, response, err);
                             } else {
                                 var $ = cheerio.load(resp);
-                                $("title").text(url.query.q + " on Seekly");
+                                $("title").text("Results for \"" + url.query.q + "\" on Seekly");
 
                                 // main result adding
                                 if (res.qnaAnswer !== null) {
@@ -161,6 +161,7 @@ async function requestListener(request, response) {
                 var host = parse(atob(url.query.link), true).host;
                 faviconUrl(host, {}, function(favicon) {
                     if (favicon !== null) {
+                        console.log(favicon)
                         response.writeHead(302, {
                             "Access-Control-Allow-Origin": "*",
                             "Location": "/proxy/?url=" + btoa(favicon)
@@ -201,7 +202,7 @@ function contentType(file) {
     switch (file.split(".")[file.split(".").length - 1]) {
         case "html":
             return "text/html";
-        case "css": 
+        case "css":
             return "text/css";
         case "json":
             return "application/json";
@@ -209,7 +210,7 @@ function contentType(file) {
             return "application/javascript";
         case "jpg":
             return "image/jpeg";
-        case "png": 
+        case "png":
             return "image/png";
         case "gif":
             return "images/gif";
@@ -222,7 +223,7 @@ function handleError(request, response, error) {
     if (typeof error == "object" || typeof error == "string") {
         if (error.stack !== undefined) {var errTxt = error.stack;}
         else if (error.message !== undefined) {var errTxt = error.message;}
-        else if (error.code !== undefined) {var errTxt = error.code;} 
+        else if (error.code !== undefined) {var errTxt = error.code;}
         else {var errTxt = error;}
         fs.readFile(__dirname + "/web/dynamic/error/index.html", function(err, resp) {
             if (err) {

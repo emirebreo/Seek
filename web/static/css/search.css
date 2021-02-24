@@ -80,6 +80,7 @@ body {
     width:18px;
     height:18px;
     float:left;
+    border-radius:2px;
 }
 
 .result p {
