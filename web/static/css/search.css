@@ -29,7 +29,7 @@ body {
 }
 
 .main {
-    max-width:900px;
+    max-width:930px;
 }
 
 .resLink {
@@ -42,7 +42,7 @@ body {
 }
 
 .result {
-    width:96%;
+    width:calc(96% - 20px);
     max-width:900px;
     min-height:50px;
     margin:10px;
@@ -51,6 +51,16 @@ body {
     border-radius:10px;
     box-shadow:0px 2px 4px rgba(0,0,0,0.25);
     transition:margin-bottom 0.2s, box-shadow 0.2s;
+}
+
+#buttonColumn {
+    background:var(--secondary-color);
+    display: inline;
+    float:right;
+    width:24px;
+    min-height:50px;
+    border-radius:10px;
+    box-shadow:0px 2px 4px rgba(0,0,0,0.25);
 }
 
 .result:hover {
@@ -90,10 +100,17 @@ body {
 }
 
 .proxyImage {
+    margin-left:3px;
+    margin-right:3px;
+    margin-top:3px;
     width:18px;
     height:18px;
-    float:right;
     border-radius:2px;
+}
+
+.resultContainer {
+    width: 100%;
+    display: block;
 }
 
 .qnaResult h4, .topResult h4 {

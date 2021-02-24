@@ -99,7 +99,27 @@ async function requestListener(request, response) {
 
                                 // web result adding
                                 for (var c in res.results) {
-                                    var chip = "<a class='resLink' href='" + res.results[c].url + "'><div class='result'><a href='proxy?url=" + btoa(res.results[c].url) + "'><img src='globe.png' class='proxyImage'></img></a><h2>" + res.results[c].title + "</h2><div class='urlCont'><img class='favicon' src='/favicon/?link=" + btoa(res.results[c].url) + "'><h4>" + res.results[c].url + "</h4></div><p>" + res.results[c].description + "</p></div></a>";
+                                    var chip = `
+                                    <div class='resultContainer'>
+                                      <div id='buttonColumn'>
+                                        <a href='proxy?url=${btoa(res.results[c].url)}'>
+                                          <img src='proxy.png' class='proxyImage'>
+                                        </a>
+                                        <a href='https://web.archive.org/*/${res.results[c].url}'>
+                                          <img src='back.png' class='proxyImage'>
+                                        </a>
+                                      </div>
+                                      <a class='resLink' href='${res.results[c].url}'>
+                                        <div class='result'>
+                                          <h2>${res.results[c].title}</h2>
+                                          <div class='urlCont'>
+                                            <img class='favicon' src='/favicon/?link=${btoa(res.results[c].url)}'>
+                                            <h4>${res.results[c].url}</h4>
+                                          </div>
+                                          <p>${res.results[c].description}</p>
+                                        </div>
+                                      </a>
+                                    </div>`;
                                     $(".main").append(chip);
                                 }
 
