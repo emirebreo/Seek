@@ -1,0 +1,60 @@
+body {
+    margin:0;
+    overflow:scroll !important;
+    overflow-x:hidden !important;
+}
+
+.header {
+    background:var(--third-color);
+    margin:0;
+    width:100%;
+    height:30px;
+}
+
+.header * {
+    margin-top:0;
+    margin-bottom:0;
+    float:left;
+}
+
+.header a {
+    margin-left:1%;
+    margin-right:10px;
+}
+
+.textBox, .subBox {
+    margin-top:5px !important;
+    margin-right:5px;
+}
+
+.resLink {
+    text-decoration:none !important;
+    text-decoration-color:var(--secondary-text-color) !important;
+}
+
+.resLink:hover {
+    text-decoration:none !important;
+}
+
+.result {
+    width:96%;
+    margin:1%;
+    padding:1%;
+    background:var(--third-color);
+}
+
+.result h2, .result h4, .result p {
+    margin-top:0;
+    margin-bottom:5px;
+    color:var(--text-color);
+    cursor:pointer;
+}
+
+.result h2 {
+    color:var(--secondary-text-color) !important;
+}
+
+.result h4 {
+    white-space:nowrap;
+    overflow:hidden;
+}

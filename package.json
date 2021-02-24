@@ -1,0 +1,28 @@
+{
+  "name": "wallaby",
+  "version": "1.0.0",
+  "description": "privacy oriented meta search engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/normanlol/wallaby.git"
+  },
+  "keywords": [
+    "search",
+    "search-engine"
+  ],
+  "author": "normanlol",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/normanlol/wallaby/issues"
+  },
+  "homepage": "https://github.com/normanlol/wallaby#readme",
+  "dependencies": {
+    "bing-scraper": "^1.0.2",
+    "cheerio": "^1.0.0-rc.5",
+    "got": "^11.8.1"
+  }
+}
