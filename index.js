@@ -73,13 +73,13 @@ async function requestListener(request, response) {
 
                                 // main result adding
                                 if (res.qnaAnswer !== null && res.qnaAnswer.answer !== "") {
-                                    var bChip = "<div class='qnaResult result'><p>" + res.qnaAnswer.answer.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p><a class='resLink' href='" + res.qnaAnswer.source.url + "'><h2>" + res.qnaAnswer.source.title.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</h2><h4>" + res.qnaAnswer.source.url + "</h4></a></div>";
+                                    var bChip = "<div class='qnaResult result'><p>" + escapeHtml(res.qnaAnswer.answer) + "</p><a class='resLink' href='" + escapeHtml(res.qnaAnswer.source.url) + "'><h2>" + escapeHtml(res.qnaAnswer.source.title) + "</h2><h4>" + escapeHtml(res.qnaAnswer.source.url) + "</h4></a></div>";
                                     $(".main").append(bChip);
                                 } else if (res.topAnswer !== null) {
                                     if (res.topAnswer.image !== null) {
-                                        var bChip = "<div class='topResult result'><img src='/proxy?url=" + btoa(res.topAnswer.image) + "'><div><h4>" + res.topAnswer.title + "</h4><h2>" + res.topAnswer.answer + "</h2><div></div>"
+                                        var bChip = "<div class='topResult result'><img src='/proxy?url=" + btoa(res.topAnswer.image) + "'><div><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2><div></div>"
                                     } else {
-                                        var bChip = "<div class='topResult result'><h4>" + res.topAnswer.title.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</h4><h2>" + res.topAnswer.answer.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</h2></div>"
+                                        var bChip = "<div class='topResult result'><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2></div>"
                                     }
                                     $(".main").append(bChip);
                                 }
@@ -98,26 +98,24 @@ async function requestListener(request, response) {
 
                                 // web result adding
                                 for (var c in res.results) {
-                                    var tit = res.results[c].title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                                    var desc = res.results[c].description.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                                     var chip = `
                                     <div class='resultContainer'>
                                         <div class='buttonColumn'>
                                             <a rel='noopener noreferrer' href='proxy?url=${btoa(res.results[c].url)}'>
                                                 <img src='proxy.png' class='resultButton'>
                                             </a>
-                                            <a rel='noopener noreferrer' href='https://web.archive.org/*/${res.results[c].url}'>
+                                            <a rel='noopener noreferrer' href='https://web.archive.org/*/${escapeHtml(res.results[c].url)}'>
                                                 <img src='back.png' class='resultButton'>
                                             </a>
                                         </div>
-                                        <a class='resLink' rel='noopener noreferrer' href='${res.results[c].url}'>
+                                        <a class='resLink' rel='noopener noreferrer' href='${escapeHtml(res.results[c].url)}'>
                                             <div class='result'>
-                                                <h2>${tit}</h2>
+                                                <h2>${escapeHtml(res.results[c].title)}</h2>
                                                 <div class='urlCont'>
                                                     <img class='favicon' src='/favicon/?link=${btoa(res.results[c].url)}'>
-                                                    <h4>${res.results[c].url}</h4>
+                                                    <h4>${escapeHtml(res.results[c].url)}</h4>
                                                 </div>
-                                                <p>${desc}</p>
+                                                <p>${escapeHtml(res.results[c].description)}</p>
                                             </div>
                                       </a>
                                     </div>`;
@@ -291,3 +289,12 @@ function btoa(string) {
 function atob(string) {
     return Buffer.from(string, "base64").toString("utf-8");
 }
+
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
