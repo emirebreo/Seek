@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/normanlol/wallaby#readme",
   "dependencies": {
-    "bing-scraper": "^1.0.2",
+    "bing-scraper": "^1.1.1",
     "cheerio": "^1.0.0-rc.5",
     "got": "^11.8.1"
   }

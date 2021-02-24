@@ -13,7 +13,7 @@ body {
 }
 
 input {
-    background:var(--secondary-color);
+    background:var(--third-color);
     color:var(--text-color);
     border:0;
 }
@@ -35,17 +35,30 @@ a:hover {
     font-family:var(--font);
 }
 
+.mid .textBox {
+    width:70% !important;
+    min-width:200px;
+    height:35px !important;
+    padding:1%;
+}
+
 .subBox {
     height:20px;
     padding-left:5px;
     padding-right:5px;
     vertical-align:center;
+    font-family:var(--font);
+}
+
+.mid .subBox {
+    height:35px !important;
 }
 
 .mid {
     position:absolute;
     left:50%;
     top:50%;
+    min-width:410px;
     -webkit-transform:translate(-50%, -50%);
     transform:translate(-50%, -50%);
     text-align:center;
@@ -65,8 +78,8 @@ a:hover {
 @media (prefers-color-scheme: dark) {
     body {
         --primary-color:#282828;
-        --secondary-color:black;
-        --third-color:#353535;
+        --secondary-color:#353535;
+        --third-color:#515151;
         --text-color:#d3d3d3;
         --secondary-text-color:#f0f0f0;
     }

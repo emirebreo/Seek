@@ -5,7 +5,7 @@ body {
 }
 
 .header {
-    background:var(--third-color);
+    background:var(--secondary-color);
     margin:0;
     width:100%;
     height:30px;
@@ -27,6 +27,10 @@ body {
     margin-right:5px;
 }
 
+.main {
+    max-width:900px;
+}
+
 .resLink {
     text-decoration:none !important;
     text-decoration-color:var(--secondary-text-color) !important;
@@ -38,9 +42,10 @@ body {
 
 .result {
     width:96%;
-    margin:1%;
+    margin:20px;
     padding:1%;
-    background:var(--third-color);
+    background:var(--secondary-color);
+    max-width:900px;
 }
 
 .result h2, .result h4, .result p {
@@ -57,4 +62,33 @@ body {
 .result h4 {
     white-space:nowrap;
     overflow:hidden;
+}
+
+.result p {
+    font-size:16px;
+}
+
+.qnaResult p {
+    font-size:20px;
+    color:var(--secondary-text-color) !important;
+}
+
+.qnaResult, .topResult {
+    min-height:150px;
+    background:var(--third-color);
+}
+
+.topResult img, .topResult div { 
+    float:left;
+}
+
+.topResult img {
+    object-fit:cover;
+    height:150px;
+    max-width:45%;
+    margin-right:1%;
+}
+
+.topResult div {
+    width:50%;
 }
