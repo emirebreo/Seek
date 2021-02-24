@@ -178,7 +178,7 @@ async function requestListener(request, response) {
         } else if (pathClean[0] == "favicon") {
             if (url.query.link) {
                 var host = parse(atob(url.query.link), true).host;
-                faviconUrl(host, {}, function(favicon) {
+                faviconUrl(host, {timeout: 2000}, function(favicon) {
                     if (favicon !== null) {
                         response.writeHead(302, {
                             "Access-Control-Allow-Origin": "*",
