@@ -104,10 +104,10 @@ async function requestListener(request, response) {
                                     <div class='resultContainer'>
                                         <div class='buttonColumn'>
                                             <a rel='noopener noreferrer' href='proxy?url=${btoa(res.results[c].url)}'>
-                                                <img src='proxy.png' class='proxyImage'>
+                                                <img src='proxy.png' class='resultButton'>
                                             </a>
                                             <a rel='noopener noreferrer' href='https://web.archive.org/*/${res.results[c].url}'>
-                                                <img src='back.png' class='proxyImage'>
+                                                <img src='back.png' class='resultButton'>
                                             </a>
                                         </div>
                                         <a class='resLink' rel='noopener noreferrer' href='${res.results[c].url}'>
