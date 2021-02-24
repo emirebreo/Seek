@@ -91,8 +91,8 @@ function requestListener(request, response) {
                                     $("#more").remove();
                                 }
 
-                                if (res.lastHref !== null) {
-                                    $("#prev").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.lastHref));
+                                if (res.prevHref !== null && url.query.scrape) {
+                                    $("#prev").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.prevHref));
                                 } else {
                                     $("#prev").remove();
                                 }
