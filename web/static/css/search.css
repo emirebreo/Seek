@@ -82,7 +82,7 @@ body {
     color:var(--secondary-text-color) !important;
 }
 
-.qnaResult, .topResult {
+.topResult {
     min-height:150px;
     background:var(--third-color);
 }
