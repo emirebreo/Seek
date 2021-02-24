@@ -92,6 +92,7 @@ body {
     white-space:nowrap;
     overflow:hidden;
     width:100% !important;
+    float:none !important;
     margin-left:0 !important;
 }
 
