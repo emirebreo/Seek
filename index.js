@@ -70,6 +70,7 @@ async function requestListener(request, response) {
                                 handleError(request, response, err);
                             } else {
                                 var $ = cheerio.load(resp);
+                                $('#searchBox').val(url.query.q)
                                 $("title").text("Results for \"" + url.query.q + "\" on Seekly");
 
                                 // main result adding
