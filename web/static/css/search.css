@@ -82,9 +82,12 @@ body {
     color:var(--secondary-text-color) !important;
 }
 
+.topResult, .qnaResult {
+    background:var(--third-color);
+}
+
 .topResult {
     min-height:150px;
-    background:var(--third-color);
 }
 
 .topResult img, .topResult div {

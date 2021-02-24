@@ -24,6 +24,7 @@
   "dependencies": {
     "bing-scraper": "^1.1.6",
     "cheerio": "^1.0.0-rc.5",
+    "favicon-url": "0.0.5",
     "got": "^11.8.1"
   }
 }

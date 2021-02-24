@@ -1,9 +1,10 @@
 const http = require("http");
 const fs = require("fs");
+const { parse } = require("url");
 const got = require("got");
 const cheerio = require("cheerio");
 const bing = require("bing-scraper");
-const { parse } = require("url");
+const faviconUrl = require("favicon-url");
 const port = process.env.PORT || 7070
 
 http.createServer(requestListener).listen(port);
@@ -131,21 +132,34 @@ function requestListener(request, response) {
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0",
                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
                     "Accept-Language": l,
-                    "Accept-Encoding": "gzip, deflate, br",
                     "Referer": "https://www.bing.com/",
                     "DNT": "1",
                     "Connection": "keep-alive",
-                    "Upgrade-Insecure-Requests": "1",
-                    "Sec-GPC": "1",
-                    "Cache-Control": "max-age=0",
-                    "TE": "Trailers"
+                    "Upgrade-Insecure-Requests": "1"
                 }
             }).then(function(resp) {
                 response.writeHead(resp.statusCode, resp.headers);
                 response.end(resp.rawBody);
             }).catch(function(err) {
                 handleError(request, response, err);
-            })
+            });
+        } else if (pathClean[0] == "favicon") {
+            if (url.query.link) {
+                var host = parse(atob(url.query.link), true).host;
+                faviconUrl(host, {}, function(favicon) {
+                    response.writeHead(302, {
+                        "Access-Control-Allow-Origin": "*",
+                        "Location": "/proxy/" + btoa(favicon)
+                    })
+                    response.end();
+                })
+            } else {
+                response.writeHead(302, {
+                    "Access-Control-Allow-Origin": "*",
+                    "Location": "/globe.png"
+                })
+                response.end();
+            }
         } else {
             fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
                 if (err) {
