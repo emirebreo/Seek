@@ -92,3 +92,17 @@ body {
 .topResult div {
     width:50%;
 }
+
+.bottom {
+    margin-left:1%;
+    margin-bottom:1%;
+}
+
+.bottom button {
+    margin-right:10px;
+    background:var(--third-color);
+    color:var(--text-color);
+    font-family:var(--font);
+    border:0;
+    height:35px;
+}

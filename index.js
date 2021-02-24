@@ -43,12 +43,24 @@ function requestListener(request, response) {
                 if (request.headers["accept-language"]) {var l = request.headers["accept-language"];}
                 else if (request.headers["Accept-Language"]) {var l = request.headers["Accept-Language"];}
                 else {var l = "en-US,en;q=0.5";}
-                bing.search({
-                    q: url.query.q,
-                    pageCount: 3,
-                    lang: l,
-                    enforceLanguage: true 
-                }, function(err, res) {
+                
+                if (url.query.scrape) {
+                    var scrapeUrl = atob(url.query.scrape);
+                    var object = {
+                        url: scrapeUrl,
+                        pageCount: 3,
+                        lang: l,
+                        enforceLanguage: true
+                    }
+                } else {
+                    var object =  {
+                        q: url.query.q,
+                        pageCount: 3,
+                        lang: l,
+                        enforceLanguage: true
+                    }
+                }
+                bing.search(object, function(err, res) {
                     if (err) {
                         handleError(request, response, err);
                     } else {
@@ -58,6 +70,8 @@ function requestListener(request, response) {
                             } else {
                                 var $ = cheerio.load(resp);
                                 $("title").text(url.query.q + " on Seekly");
+
+                                // main result adding
                                 if (res.qnaAnswer !== null) {
                                     var bChip = "<div class='qnaResult result'><p>" + res.qnaAnswer.answer + "</p><a class='resLink' href='" + res.qnaAnswer.source.url + "'><h2>" + res.qnaAnswer.source.title + "</h2><h4>" + res.qnaAnswer.source.url + "</h4></a></div>";
                                     $(".main").append(bChip);
@@ -69,10 +83,26 @@ function requestListener(request, response) {
                                     }
                                     $(".main").append(bChip);
                                 }
+
+                                // prev/next buttons
+                                if (res.nextHref !== null) {
+                                    $("#more").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.nextHref));
+                                } else {
+                                    $("#more").remove();
+                                }
+
+                                if (res.lastHref !== null) {
+                                    $("#prev").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.lastHref));
+                                } else {
+                                    $("#prev").remove();
+                                }
+
+                                // web result adding
                                 for (var c in res.results) {
                                     var chip = "<a class='resLink' href='" + res.results[c].url + "'><div class='result'><h2>" + res.results[c].title + "</h2><h4>" + res.results[c].url + "</h4><p>" + res.results[c].description + "</p></div></a>";
                                     $(".main").append(chip);
                                 }
+
                                 response.writeHead(200, {
                                     "Accept-Control-Allow-Origin": "*",
                                     "Content-Type": "text/html"
