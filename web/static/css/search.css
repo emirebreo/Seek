@@ -83,7 +83,7 @@ body {
     white-space:nowrap;
     overflow:hidden;
     float:left;
-    width:calc(97% - 18px);
+    width:calc(98% - 18px);
     margin-left:5px;
 }
 
@@ -93,6 +93,11 @@ body {
     float:left;
     border-radius:2px;
     background-color:white;
+}
+
+.result .urlCont {
+    height:18px;
+    width:100%;
 }
 
 .result p {
