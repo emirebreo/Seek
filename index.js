@@ -12,8 +12,8 @@ console.log("Server is listening on port " + port);
 
 async function requestListener(request, response) {
     var url = parse(request.url, true);
-    if (fs.existsSync(__dirname + "/web/static" + url.path + "index.html")) {
-        fs.readFile(__dirname + "/web/static" + url.path + "index.html", function (err, resp) {
+    if (fs.existsSync(__dirname + "/web/static" + url.pathname + "index.html")) {
+        fs.readFile(__dirname + "/web/static" + url.pathname + "index.html", function (err, resp) {
             if (err) {
                 handleError(request, response, err);
             } else {
@@ -24,14 +24,14 @@ async function requestListener(request, response) {
                 response.end(resp);
             }
         });
-    } else if (fs.existsSync(__dirname + "/web/static" + url.path)) {
-        fs.readFile(__dirname + "/web/static" + url.path, function (err, resp) {
+    } else if (fs.existsSync(__dirname + "/web/static" + url.pathname)) {
+        fs.readFile(__dirname + "/web/static" + url.pathname, function (err, resp) {
             if (err) {
                 handleError(request, response, err);
             } else {
                 response.writeHead(200, {
                     "Access-Control-Allow-Origin": "*",
-                    "Content-Type": contentType(url.path)
+                    "Content-Type": contentType(url.pathname)
                 });
                 response.end(resp);
             }
@@ -39,129 +39,174 @@ async function requestListener(request, response) {
     } else {
         var pathClean = url.pathname.split("/").slice(1);
         var path = url.pathname;
-        if (pathClean[0] == "search") {
-            if (url.query.q) {
-                if (request.headers["accept-language"]) {var l = request.headers["accept-language"];}
-                else if (request.headers["Accept-Language"]) {var l = request.headers["Accept-Language"];}
-                else {var l = "en-US,en;q=0.5";}
-
-                if (url.query.scrape) {
-                    var scrapeUrl = atob(url.query.scrape);
-                    var object = {
-                        url: scrapeUrl,
-                        pageCount: 3,
-                        lang: l
+        switch(pathClean[0]) {
+            case "search":
+                if (url.query.q) {
+                    if (request.headers["accept-language"]) {var l = request.headers["accept-language"];}
+                    else if (request.headers["Accept-Language"]) {var l = request.headers["Accept-Language"];}
+                    else {var l = "en-US,en;q=0.5";}
+    
+                    if (url.query.scrape) {
+                        var scrapeUrl = atob(url.query.scrape);
+                        var object = {
+                            url: scrapeUrl,
+                            pageCount: 3,
+                            lang: l
+                        }
+                    } else {
+                        var object =  {
+                            q: url.query.q,
+                            pageCount: 3,
+                            lang: l
+                        }
+                    }
+                    bing.search(object, function(err, res) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            fs.readFile(__dirname + "/web/dynamic/search/index.html", function(err, resp) {
+                                if (err) {
+                                    handleError(request, response, err);
+                                } else {
+                                    var $ = cheerio.load(resp);
+                                    $('#searchBox').val(url.query.q)
+                                    $("title").text("Results for \"" + url.query.q + "\" on Seekly");
+    
+                                    // main result adding
+                                    if (res.qnaAnswer !== null && res.qnaAnswer.answer !== "") {
+                                        var bChip = "<div class='qnaResult result'><p>" + escapeHtml(res.qnaAnswer.answer) + "</p><a class='resLink' href='" + escapeHtml(res.qnaAnswer.source.url) + "'><h2>" + escapeHtml(res.qnaAnswer.source.title) + "</h2><h4>" + escapeHtml(res.qnaAnswer.source.url) + "</h4></a></div>";
+                                        $(".main").append(bChip);
+                                    } else if (res.topAnswer !== null) {
+                                        if (res.topAnswer.image !== null) {
+                                            var bChip = "<div class='topResult result'><img src='/proxy?url=" + btoa(res.topAnswer.image) + "'><div><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2><div></div>"
+                                        } else {
+                                            var bChip = "<div class='topResult result'><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2></div>"
+                                        }
+                                        $(".main").append(bChip);
+                                    }
+    
+                                    // prev/next buttons
+                                    if (res.nextHref !== null) {
+                                        $("#more").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.nextHref));
+                                    } else {
+                                        $("#more").remove();
+                                    }
+                                    if (res.prevHref !== null && url.query.scrape) {
+                                        $("#prev").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.prevHref));
+                                    } else {
+                                        $("#prev").remove();
+                                    }
+    
+                                    // web result adding
+                                    for (var c in res.results) {
+                                        var chip = `
+                                        <div class='resultContainer'>
+                                            <div class='buttonColumn'>
+                                                <a rel='noopener noreferrer' href='proxy?url=${btoa(res.results[c].url)}'>
+                                                    <img src='proxy.png' class='resultButton'>
+                                                </a>
+                                                <a rel='noopener noreferrer' href='https://web.archive.org/*/${escapeHtml(res.results[c].url)}'>
+                                                    <img src='back.png' class='resultButton'>
+                                                </a>
+                                            </div>
+                                            <a class='resLink' rel='noopener noreferrer' href='${escapeHtml(res.results[c].url)}'>
+                                                <div class='result'>
+                                                    <h2>${escapeHtml(res.results[c].title)}</h2>
+                                                    <div class='urlCont'>
+                                                        <img class='favicon' src='/favicon/?link=${btoa(res.results[c].url)}'>
+                                                        <h4>${escapeHtml(res.results[c].url)}</h4>
+                                                    </div>
+                                                    <p>${escapeHtml(res.results[c].description)}</p>
+                                                </div>
+                                          </a>
+                                        </div>`;
+                                        $(".main").append(chip);
+                                    }
+    
+                                    response.writeHead(200, {
+                                        "Accept-Control-Allow-Origin": "*",
+                                        "Content-Type": "text/html"
+                                    });
+                                    response.end($.html());
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    response.writeHead(302, {
+                        "Access-Control-Allow-Origin": "*",
+                        "Location": "/"
+                    })
+                    response.end();
+                }
+            return;
+            
+            case "proxy":
+                if (url.query.url) {
+                    var pUrl = atob(url.query.url);
+                    var pUrlp = parse(pUrl, true);
+                    try {
+                        got(pUrl, {
+                            headers: {
+                                "Host": pUrlp.host,
+                                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0",
+                                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                                "Accept-Language": "en-US,en;q=0.5",
+                                "Accept-Encoding": "gzip, deflate, br",
+                                "DNT": "1",
+                                "Connection": "keep-alive",
+                                "Upgrade-Insecure-Requests": "1",
+                                "Sec-GPC": "1"
+                            }
+                        }).then(function(r) {
+                            response.end(r.rawBody);
+                        })
+                    } catch(error) {
+                        handleError(request, response, error);
                     }
                 } else {
-                    var object =  {
-                        q: url.query.q,
-                        pageCount: 3,
-                        lang: l
-                    }
-                }
-                bing.search(object, function(err, res) {
-                    if (err) {
-                        handleError(request, response, err);
-                    } else {
-                        fs.readFile(__dirname + "/web/dynamic/search/index.html", function(err, resp) {
-                            if (err) {
-                                handleError(request, response, err);
-                            } else {
-                                var $ = cheerio.load(resp);
-                                $('#searchBox').val(url.query.q)
-                                $("title").text("Results for \"" + url.query.q + "\" on Seekly");
-
-                                // main result adding
-                                if (res.qnaAnswer !== null && res.qnaAnswer.answer !== "") {
-                                    var bChip = "<div class='qnaResult result'><p>" + escapeHtml(res.qnaAnswer.answer) + "</p><a class='resLink' href='" + escapeHtml(res.qnaAnswer.source.url) + "'><h2>" + escapeHtml(res.qnaAnswer.source.title) + "</h2><h4>" + escapeHtml(res.qnaAnswer.source.url) + "</h4></a></div>";
-                                    $(".main").append(bChip);
-                                } else if (res.topAnswer !== null) {
-                                    if (res.topAnswer.image !== null) {
-                                        var bChip = "<div class='topResult result'><img src='/proxy?url=" + btoa(res.topAnswer.image) + "'><div><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2><div></div>"
-                                    } else {
-                                        var bChip = "<div class='topResult result'><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2></div>"
-                                    }
-                                    $(".main").append(bChip);
-                                }
-
-                                // prev/next buttons
-                                if (res.nextHref !== null) {
-                                    $("#more").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.nextHref));
-                                } else {
-                                    $("#more").remove();
-                                }
-                                if (res.prevHref !== null && url.query.scrape) {
-                                    $("#prev").attr("href",  "/search?q=" + url.query.q + "&scrape=" + btoa(res.prevHref));
-                                } else {
-                                    $("#prev").remove();
-                                }
-
-                                // web result adding
-                                for (var c in res.results) {
-                                    var chip = `
-                                    <div class='resultContainer'>
-                                        <div class='buttonColumn'>
-                                            <a rel='noopener noreferrer' href='proxy?url=${btoa(res.results[c].url)}'>
-                                                <img src='proxy.png' class='resultButton'>
-                                            </a>
-                                            <a rel='noopener noreferrer' href='https://web.archive.org/*/${escapeHtml(res.results[c].url)}'>
-                                                <img src='back.png' class='resultButton'>
-                                            </a>
-                                        </div>
-                                        <a class='resLink' rel='noopener noreferrer' href='${escapeHtml(res.results[c].url)}'>
-                                            <div class='result'>
-                                                <h2>${escapeHtml(res.results[c].title)}</h2>
-                                                <div class='urlCont'>
-                                                    <img class='favicon' src='/favicon/?link=${btoa(res.results[c].url)}'>
-                                                    <h4>${escapeHtml(res.results[c].url)}</h4>
-                                                </div>
-                                                <p>${escapeHtml(res.results[c].description)}</p>
-                                            </div>
-                                      </a>
-                                    </div>`;
-                                    $(".main").append(chip);
-                                }
-
-                                response.writeHead(200, {
-                                    "Accept-Control-Allow-Origin": "*",
-                                    "Content-Type": "text/html"
-                                });
-                                response.end($.html());
-                            }
-                        })
-                    }
-                })
-            } else {
-                response.writeHead(302, {
-                    "Access-Control-Allow-Origin": "*",
-                    "Location": "/"
-                })
-                response.end();
-            }
-        } else if (pathClean[0] == "proxy") {
-            if (url.query.url) {
-                var pUrl = atob(url.query.url);
-                var pUrlp = parse(pUrl, true);
-                try {
-                    got(pUrl, {
-                        headers: {
-                            "Host": pUrlp.host,
-                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0",
-                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                            "Accept-Language": "en-US,en;q=0.5",
-                            "Accept-Encoding": "gzip, deflate, br",
-                            "DNT": "1",
-                            "Connection": "keep-alive",
-                            "Upgrade-Insecure-Requests": "1",
-                            "Sec-GPC": "1"
+                    fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            response.writeHead(404, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Content-Type": "text/html"
+                            });
+                            response.end(resp);
                         }
-                    }).then(function(r) {
-                        response.end(r.rawBody);
                     })
-                } catch(error) {
-                    handleError(request, response, error);
                 }
-            } else {
+            return;
+
+            case "favicon":
+                if (url.query.link) {
+                    var host = parse(atob(url.query.link), true).host;
+                    faviconUrl(host, {timeout: 2000}, function(favicon) {
+                        if (favicon !== null) {
+                            response.writeHead(302, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Location": "/proxy/?url=" + btoa(favicon)
+                            })
+                            response.end();
+                        } else {
+                            response.writeHead(302, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Location": "/globe.png"
+                            })
+                            response.end();
+                        }
+                    })
+                } else {
+                    response.writeHead(302, {
+                        "Access-Control-Allow-Origin": "*",
+                        "Location": "/globe.png"
+                    })
+                    response.end();
+                }
+            return;
+
+            default:
                 fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
                     if (err) {
                         handleError(request, response, err);
@@ -173,44 +218,7 @@ async function requestListener(request, response) {
                         response.end(resp);
                     }
                 })
-            }
-        } else if (pathClean[0] == "favicon") {
-            if (url.query.link) {
-                var host = parse(atob(url.query.link), true).host;
-                faviconUrl(host, {timeout: 2000}, function(favicon) {
-                    if (favicon !== null) {
-                        response.writeHead(302, {
-                            "Access-Control-Allow-Origin": "*",
-                            "Location": "/proxy/?url=" + btoa(favicon)
-                        })
-                        response.end();
-                    } else {
-                        response.writeHead(302, {
-                            "Access-Control-Allow-Origin": "*",
-                            "Location": "/globe.png"
-                        })
-                        response.end();
-                    }
-                })
-            } else {
-                response.writeHead(302, {
-                    "Access-Control-Allow-Origin": "*",
-                    "Location": "/globe.png"
-                })
-                response.end();
-            }
-        } else {
-            fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
-                if (err) {
-                    handleError(request, response, err);
-                } else {
-                    response.writeHead(404, {
-                        "Access-Control-Allow-Origin": "*",
-                        "Content-Type": "text/html"
-                    });
-                    response.end(resp);
-                }
-            })
+            return;
         }
     }
 }
