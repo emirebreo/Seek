@@ -24,6 +24,42 @@ body {
     }
 }
 
+@media (max-width:430px) {
+    .mid p {
+        display:none;
+    }
+
+    .footer .un {
+        display:none;
+    }
+    
+    .mid .small-disp {
+        display:block !important;
+    }
+
+    .mid .wider-disp {
+        display:none;
+    }
+
+    .question {
+        margin-bottom: 20px !important;
+    }
+
+    .question h2, .question p {
+        margin-bottom:5px !important;
+    }
+}
+
+@media (min-width:430px) {
+    .mid .small-disp {
+        display:none;
+    }
+
+    .mid .wider-disp {
+        display:block !important;
+    }
+}
+
 input {
     background:var(--third-color);
     color:var(--text-color);
