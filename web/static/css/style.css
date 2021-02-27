@@ -98,3 +98,12 @@ a:hover, a:focus {
     height:40px;
     text-align:center;
 }
+
+.question {
+    margin-top:1%;
+    margin-bottom:1%;
+}
+
+.question h2, .question p {
+    margin:0 !important;
+}
