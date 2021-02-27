@@ -2,7 +2,7 @@ body {
     --primary-color:#f2f2f2;
     --secondary-color:#d5d5d5;
     --third-color:#ffffff;
-    --fourth-color:#a5a5a5;
+    --fourth-color:#d2d2d2;
     --text-color:black;
     --secondary-text-color:#313131;
     --font:Helvetica, Arial, sans-serif;
@@ -13,6 +13,17 @@ body {
     overflow:hidden;
 }
 
+@media (prefers-color-scheme: dark) {
+    body {
+        --primary-color:#282828;
+        --secondary-color:#353535;
+        --third-color:#515151;
+        --fourth-color:#6c6c6c;
+        --text-color:#d3d3d3;
+        --secondary-text-color:#f0f0f0;
+    }
+}
+
 input {
     background:var(--third-color);
     color:var(--text-color);
@@ -20,12 +31,17 @@ input {
     border-radius:2px;
 }
 
+input:focus, .subBox:hover {
+    color:var(--secondary-text-color);
+    background:var(--fourth-color);
+}
+
 a {
     color:var(--secondary-text-color);
     text-decoration:none;
 }
 
-a:hover {
+a:hover, a:focus {
     text-decoration:underline;
     text-decoration-color:var(--secondary-text-color);
 }
@@ -53,10 +69,6 @@ a:hover {
     font-family:var(--font);
 }
 
-.subBox:hover{
-    background-color:var(--fourth-color);
-}
-
 .mid .subBox {
     height:35px !important;
 }
@@ -80,14 +92,4 @@ a:hover {
     width:100%;
     height:40px;
     text-align:center;
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        --primary-color:#282828;
-        --secondary-color:#353535;
-        --third-color:#515151;
-        --text-color:#d3d3d3;
-        --secondary-text-color:#f0f0f0;
-    }
 }
