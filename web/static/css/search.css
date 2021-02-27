@@ -87,6 +87,10 @@ body {
     margin-left:5px;
 }
 
+.result p {
+    margin-top:5px !important;
+}
+
 .result .favicon {
     width:18px;
     height:18px;
