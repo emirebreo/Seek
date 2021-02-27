@@ -69,10 +69,6 @@ a:hover, a:focus {
     font-family:var(--font);
 }
 
-.mid .subBox {
-    height:35px !important;
-}
-
 .mid {
     position:absolute;
     left:50%;
@@ -81,6 +77,15 @@ a:hover, a:focus {
     -webkit-transform:translate(-50%, -50%);
     transform:translate(-50%, -50%);
     text-align:center;
+}
+
+.mid .subBox {
+    height:35px !important;
+}
+
+.mid h1 {
+    margin-top:0;
+    margin-bottom:10px;
 }
 
 .footer {
