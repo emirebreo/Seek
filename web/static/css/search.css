@@ -116,6 +116,10 @@ body {
     text-decoration-color:var(--text-color);
 }
 
+#more button {
+  border-radius: 4px;
+}
+
 .resultContainer {
     width: 100%;
     display: block;
