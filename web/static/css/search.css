@@ -178,3 +178,9 @@ body {
     border:0;
     height:35px;
 }
+
+@media (max-width:430px) {
+    .buttonColumn {
+      display:none;
+    }
+}
