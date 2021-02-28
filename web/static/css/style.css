@@ -32,7 +32,7 @@ body {
     .footer .un {
         display:none;
     }
-    
+
     .mid .small-disp {
         display:block !important;
     }
@@ -108,8 +108,9 @@ a:hover, a:focus {
 .mid {
     position:absolute;
     left:50%;
-    top:50%;
-    min-width:410px;
+    top:calc(50% - 40px);
+    width:650px;
+    max-width:100%;
     -webkit-transform:translate(-50%, -50%);
     transform:translate(-50%, -50%);
     text-align:center;
