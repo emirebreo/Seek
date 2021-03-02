@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>temp</title>
+        <link href="/css/style.css" rel="stylesheet">
+        <link href="/css/image.css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="header">
+            <a class="logo" href="/"><h2>Seekly</h2></a>
+            <form method="GET" action="/search/images">
+                <input id="searchBox" class="textBox" autocorrect="off" autocomplete="off" name="q" placeholder="Seek privately.">
+                <input class="subBox" type="submit" value="Seek">
+            </form>
+            <a class="tabParent" id="webTab"><button class="tab">web</button></a>
+            <div class="tabParent tabActive" id="imgTab"><button class="tab">images</button></div>
+        </div>
+        <div class="main">
+            <div style="margin-left:10px;margin-top:10px;">
+                <a id="more"><button>more results</button></a>
+            </div>
+            <div class="alert">
+                <p>Images may be subject to copyright.</p>
+            </div>
+            <div class="split" id="splitA"></div>
+            <div class="split" id="splitB"></div>
+            <div class="split" id="splitC"></div>
+            <div class="split" id="splitD"></div>
+            <div class="split" id="splitE"></div>
+        </div>
+    </body>
+</html>
