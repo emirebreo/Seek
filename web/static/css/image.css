@@ -80,6 +80,12 @@ button {
     }
 }
 
+@media (max-width:550px) {
+    .tabActive .tab {
+        display:none !important;
+    }
+}
+
 .imageContainer {
     padding:5px;
     width:100%;

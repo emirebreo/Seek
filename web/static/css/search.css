@@ -198,8 +198,15 @@ button {
     margin-bottom:1%;
 }
 
+@media (max-width:550px) {
+    .tabActive .tab {
+        display:none !important;
+    }
+}
+
 @media (max-width:430px) {
     .buttonColumn {
-      display:none;
+        display:none;
     }
+    
 }
