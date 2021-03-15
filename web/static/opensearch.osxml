@@ -1,0 +1,8 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+    <ShortName>Seekly</ShortName>
+    <Description>Search Seekly.org</Description>
+    <InputEncoding>UTF-8</InputEncoding>
+    <LongName>Seekly Seach</LongName>
+    <Image width="16" height="16">https://seekly.org/favicon.png</Image>
+    <Url type="text/html" method="get" template="https://seekly.org/search?q={searchTerms}"/>
+</OpenSearchDescription>

@@ -365,6 +365,12 @@ function contentType(file) {
             return "image/png";
         case "gif":
             return "images/gif";
+        case "xml":
+            return "application/xml";
+        case "osxml":
+            return "application/opensearchdescription+xml";
+        case "json":
+            return "application/json";
         default:
             return "text/plain";
     }
