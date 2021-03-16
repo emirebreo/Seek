@@ -340,25 +340,27 @@ async function requestListener(request, response) {
                 if (url.query.url) {
                     var pUrl = atob(url.query.url);
                     var pUrlp = parse(pUrl, true);
-                    try {
-                        got(pUrl, {
-                            headers: {
-                                "Host": pUrlp.host,
-                                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0",
-                                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                                "Accept-Language": "en-US,en;q=0.5",
-                                "Accept-Encoding": "gzip, deflate, br",
-                                "DNT": "1",
-                                "Connection": "keep-alive",
-                                "Upgrade-Insecure-Requests": "1",
-                                "Sec-GPC": "1"
-                            }
-                        }).then(function(r) {
-                            response.end(r.rawBody);
-                        })
-                    } catch(error) {
-                        handleError(request, response, error);
-                    }
+                    got(pUrl, {
+                        headers: {
+                            "Host": pUrlp.host,
+                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0",
+                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                            "Accept-Language": "en-US,en;q=0.5",
+                            "Accept-Encoding": "gzip, deflate, br",
+                            "DNT": "1",
+                            "Connection": "keep-alive",
+                            "Upgrade-Insecure-Requests": "1",
+                            "Sec-GPC": "1"
+                        }
+                    }).then(function(r) {
+                        response.end(r.rawBody);
+                    }).catch(function(e) {
+                        if (e.response.body) {
+                            response.end(e.response.rawBody);
+                        } else {
+                            response.end();
+                        }
+                    })
                 } else {
                     fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
                         if (err) {
