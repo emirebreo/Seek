@@ -68,7 +68,7 @@ async function requestListener(request, response) {
                                 }
                             } else {
                                 var object =  {
-                                    q: encodeURIComponent(url.query.q),
+                                    q: url.query.q,
                                     pageCount: 3,
                                     lang: l,
                                     cookieString: cook
@@ -90,14 +90,14 @@ async function requestListener(request, response) {
                                             // main result adding
                                             if (res.qnaAnswer !== null && res.qnaAnswer.answer !== "") {
                                                 var bChip = "<div class='qnaResult result'><p>" + escapeHtml(res.qnaAnswer.answer) + "</p><a class='resLink' href='" + escapeHtml(res.qnaAnswer.source.url) + "'><h2>" + escapeHtml(res.qnaAnswer.source.title) + "</h2><h4>" + escapeHtml(res.qnaAnswer.source.url) + "</h4></a></div>";
-                                                $(".main").append(bChip);
+                                                $(".results").append(bChip);
                                             } else if (res.topAnswer !== null) {
                                                 if (res.topAnswer.image !== null) {
                                                     var bChip = "<div class='topResult result'><img src='/proxy?url=" + btoa(res.topAnswer.image) + "'><div><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2><div></div>"
                                                 } else {
                                                     var bChip = "<div class='topResult result'><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2></div>"
                                                 }
-                                                $(".main").append(bChip);
+                                                $(".results").append(bChip);
                                             }
             
                                             // prev/next buttons
@@ -115,6 +115,75 @@ async function requestListener(request, response) {
                                             // linking image results
                                             $("#imgTab").attr("href", "/search/images?q=" + url.query.q + "&cookies=" + btoa(cook));
             
+                                            // suggested results adding
+                                            for (var c in res.suggestedQueries) {
+                                                var q = `
+                                                    <a rel='noopener noreferrer' href='/search/?q=${encodeURIComponent(parse(res.suggestedQueries[c].url, true).query.q)}&scrape=${btoa(res.suggestedQueries[c].url)}'>
+                                                        <button>${res.suggestedQueries[c].query}</button>
+                                                    </a>
+                                                `;
+                                                $(".suggested").append(q);
+                                            }
+                                            if (res.suggestedQueries.length == 0) {$(".suggested").remove();}
+
+                                            // carousel adding
+                                            if (res.carousel !== null && res.carousel !== undefined) {
+                                                if (res.carousel.cards && res.carousel.cards.length > 0) {
+                                                    var caroTitle = `<h2>${res.carousel.title}</h2>`;
+                                                    $(".carousel").append(caroTitle);
+                                                    for (var c in res.carousel.cards) {
+                                                        var ca = `
+                                                            <a rel='noopener noreferrer' href='/search?q=${encodeURIComponent(parse(res.carousel.cards[c].url, true).query.q)}&scrape=${btoa(res.carousel.cards[c].url)}'>
+                                                                <div class='chip'>
+                                                                    <img src='/proxy?url=${btoa(res.carousel.cards[c].image)}'>
+                                                                    <p>${res.carousel.cards[c].content}</p>
+                                                                </div>
+                                                            </a>
+                                                        `;
+                                                        $(".carousel").append(ca);
+                                                    }
+                                                } else {
+                                                    $(".carousel").remove();
+                                                }
+                                            } else {
+                                                $(".carousel").remove();
+                                            }
+
+                                            // sidebar adding
+                                            if (res.sidebar) {
+                                                var foot = "";
+                                                for (var c in res.sidebar.footnotes) {
+                                                    if (res.sidebar.footnotes[c].content == "Suggest an edit") {continue;}
+                                                    var foot = foot + "<br><a rel='nofollow noreferrer' href='" + res.sidebar.footnotes[c].url + "'><i>" + res.sidebar.footnotes[c].content +"</i></a>";
+                                                }
+                                                if (res.sidebar.image !== null) {
+                                                    var s = `
+                                                        <div class='sidebar'>
+                                                            <h2>${res.sidebar.title}</h2>
+                                                            <h4>${res.sidebar.subtitle}</h4>
+                                                            <div class='sbs'>
+                                                                <img align='right' src='/proxy?url=${btoa(res.sidebar.image)}'>
+                                                                <p>${res.sidebar.snippet}</p>
+                                                            </div>
+                                                            <div class='footnotes'>${foot}</div>
+                                                        </div>
+                                                    `;
+                                                } else {
+                                                    var s = `
+                                                        <div class='sidebar'>
+                                                            <h2>${res.sidebar.title}</h2>
+                                                            <h4>${res.sidebar.subtitle}</h4>
+                                                            <div class='sbs'>
+                                                                <p>${res.sidebar.snippet}</p>
+                                                            </div>
+                                                            <div class='footnotes'>${foot}</div>
+                                                        </div>
+                                                    `;
+                                                }
+                                                
+                                                $(".side").append(s);
+                                            }
+
                                             // web result adding
                                             for (var c in res.results) {
                                                 var chip = `
@@ -138,7 +207,7 @@ async function requestListener(request, response) {
                                                         </div>
                                                   </a>
                                                 </div>`;
-                                                $(".main").append(chip);
+                                                $(".results").append(chip);
                                             }
             
                                             response.writeHead(200, {
@@ -184,7 +253,7 @@ async function requestListener(request, response) {
                             };
                         } else {
                             var object =  {
-                                q: encodeURIComponent(url.query.q),
+                                q: url.query.q,
                                 pageCount: 3,
                                 lang: l,
                                 cookieString: cook
@@ -210,7 +279,7 @@ async function requestListener(request, response) {
                                                     <img src='/proxy/?url=${btoa(resp.results[c].thumbnail)}'>
                                                     <div class='sourceTxt'>
                                                         <a href='${resp.results[c].source}' rel='noopener noreferrer'>Source</a> -
-                                                        <a href='/proxy?url=${btoa(resp.results[c].direct)}' rel='noopener noreferrer'>Direct</a>
+                                                        <a href='/proxy?url=${btoa(resp.results[c].direct)}' rel='noopener noreferrer'>Direct</a> (<a rel='noopener noreferrer' href='${resp.results[c].direct}'>Unproxied</a>)
                                                     </div>
                                                 </div>
                                             `;

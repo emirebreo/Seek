@@ -11,7 +11,7 @@ button {
     font-family:var(--font);
     border:0;
     height:35px;
-    border-radius: 4px;
+    border-radius:4px;
 }
 
 #more, #less {
@@ -45,8 +45,8 @@ button {
 .tabParent .tab {
     margin-right:0 !important;
     cursor:pointer;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
     border-bottom-left-radius:0;
     border-bottom-right-radius:0;
 }
@@ -60,12 +60,130 @@ button {
     margin-right:5px;
 }
 
-.main {
-    max-width:930px;
+@media (min-width:1370px) {
+    .main {
+        max-width:930px;
+        float:right;
+        margin-right:10px;
+    }
+
+    .side {
+        float:right;
+        height:100%;
+        width:calc(100% - 940px);
+        margin-right:10px;
+    }
+
+    .sidebar {
+        background:var(--third-color);
+        color:var(--text-color);
+        margin-top:20px;
+        padding:5px;
+        border-radius:4px;
+        max-width:590px;
+    }
+}
+
+@media (max-width:1370px) {
+    .side {
+        max-width:930px;
+    }
+
+    .main {
+        max-width:930px;
+    }
+
+    .sidebar {
+        background:var(--third-color);
+        color:var(--text-color);
+        margin-top:10px;
+        margin-left:10px;
+        padding:5px;
+        border-radius:4px;
+    }
+}
+
+.sidebar h2, .sidebar h4, .sidebar p {
+    margin:0;
+}
+
+.sidebar .sbs {
+    margin-top:5px;
+    min-height:80px;
+    width:100%;
+}
+
+.sidebar .sbs img {
+    max-width:80px;
+    max-height:80px;
+    object-fit:cover;
+    margin-right:7.5px;
+    text-align:right !important;
+}
+
+.sidebar .sbs p {
+    text-align:justify;
+    word-wrap:break-word;
 }
 
 .resLink, .resLink:hover {
     text-decoration:none;
+}
+
+.suggested {
+    margin-top:10px;
+    margin-left:10px;
+    max-width:900px;
+    max-height:35px;
+    overflow-x:scroll;
+    white-space:nowrap;
+    padding-bottom:15px;
+}
+
+.suggested a, .suggested a:hover, .suggested a *, .suggested a *:hover {
+    text-decoration:none !important;
+    -webkit-user-drag:none;
+    cursor:pointer;
+}
+
+.carousel {
+    margin-left:10px;
+    margin-top:10px;
+    background-color:var(--secondary-color);
+    max-width:900px;
+    width:calc(96% - 20px);
+    padding:5px;
+    border-radius:4px;
+    min-height:98px;
+}
+
+.carousel h2 {
+    margin:0;
+}
+
+.carousel .chip {
+    background:var(--third-color);
+    color:var(--secondary-text-color);
+    width:45.5%;
+    float:left;
+    height:60px;
+    border-radius:4px;
+    margin-right:10px;
+}
+
+.carousel .chip img {
+    height:60px;
+    border-top-left-radius:4px;
+    border-bottom-left-radius:4px;
+    float:left;
+}
+
+.carousel .chip p {
+    vertical-align:middle;
+    float:left;
+    margin-top:0;
+    margin-bottom:0;
+    margin-left:5px;
 }
 
 .result {
@@ -78,11 +196,12 @@ button {
     border-radius:10px;
     box-shadow:0px 2px 4px rgba(0,0,0,0.25);
     transition:margin-bottom 0.2s, box-shadow 0.2s;
+    -webkit-user-drag:none;
 }
 
 .buttonColumn {
     background:var(--secondary-color);
-    display: inline;
+    display:inline;
     float:right;
     width:24px;
     min-height:50px;
@@ -134,7 +253,7 @@ button {
 
 .result p {
     font-size:16px;
-    margin-top:6px !important;
+    margin-top:7px !important;
 }
 
 .resultButton {
@@ -149,8 +268,9 @@ button {
 }
 
 .resultContainer {
-    width: 100%;
-    display: block;
+    width:100%;
+    display:block;
+    -webkit-user-drag:none;
 }
 
 .qnaResult h4, .topResult h4 {
@@ -208,5 +328,17 @@ button {
     .buttonColumn {
         display:none;
     }
-    
+    .tab {
+        display:none !important;
+    }
+}
+
+@media (max-width:340px) {
+    .header .logo {
+        display:none !important;
+    }
+
+    .header form {
+        margin-left:10px;
+    }
 }
