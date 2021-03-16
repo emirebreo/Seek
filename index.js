@@ -151,37 +151,39 @@ async function requestListener(request, response) {
 
                                             // sidebar adding
                                             if (res.sidebar) {
-                                                var foot = "";
-                                                for (var c in res.sidebar.footnotes) {
-                                                    if (res.sidebar.footnotes[c].content == "Suggest an edit") {continue;}
-                                                    var foot = foot + "<br><a rel='nofollow noreferrer' href='" + res.sidebar.footnotes[c].url + "'><i>" + res.sidebar.footnotes[c].content +"</i></a>";
-                                                }
-                                                if (res.sidebar.image !== null) {
-                                                    var s = `
-                                                        <div class='sidebar'>
-                                                            <h2>${res.sidebar.title}</h2>
-                                                            <h4>${res.sidebar.subtitle}</h4>
-                                                            <div class='sbs'>
-                                                                <img align='right' src='/proxy?url=${btoa(res.sidebar.image)}'>
-                                                                <p>${res.sidebar.snippet}</p>
+                                                if (res.sidebar.snippet !== null) {
+                                                    var foot = "";
+                                                    for (var c in res.sidebar.footnotes) {
+                                                        if (res.sidebar.footnotes[c].content == "Suggest an edit") {continue;}
+                                                        var foot = foot + "<br><a rel='nofollow noreferrer' href='" + res.sidebar.footnotes[c].url + "'><i>" + res.sidebar.footnotes[c].content +"</i></a>";
+                                                    }
+                                                    if (res.sidebar.image !== null) {
+                                                        var s = `
+                                                            <div class='sidebar'>
+                                                                <h2>${res.sidebar.title}</h2>
+                                                                <h4>${res.sidebar.subtitle}</h4>
+                                                                <div class='sbs'>
+                                                                    <img align='right' src='/proxy?url=${btoa(res.sidebar.image)}'>
+                                                                    <p>${res.sidebar.snippet}</p>
+                                                                </div>
+                                                                <div class='footnotes'>${foot}</div>
                                                             </div>
-                                                            <div class='footnotes'>${foot}</div>
-                                                        </div>
-                                                    `;
-                                                } else {
-                                                    var s = `
-                                                        <div class='sidebar'>
-                                                            <h2>${res.sidebar.title}</h2>
-                                                            <h4>${res.sidebar.subtitle}</h4>
-                                                            <div class='sbs'>
-                                                                <p>${res.sidebar.snippet}</p>
+                                                        `;
+                                                    } else {
+                                                        var s = `
+                                                            <div class='sidebar'>
+                                                                <h2>${res.sidebar.title}</h2>
+                                                                <h4>${res.sidebar.subtitle}</h4>
+                                                                <div class='sbs'>
+                                                                    <p>${res.sidebar.snippet}</p>
+                                                                </div>
+                                                                <div class='footnotes'>${foot}</div>
                                                             </div>
-                                                            <div class='footnotes'>${foot}</div>
-                                                        </div>
-                                                    `;
+                                                        `;
+                                                    }
+                                                    
+                                                    $(".side").append(s);
                                                 }
-                                                
-                                                $(".side").append(s);
                                             }
 
                                             // web result adding
