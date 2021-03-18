@@ -5,5 +5,7 @@
     <LongName>Seekly Seach</LongName>
     <Image width="16" height="16">https://seekly.org/favicon.png</Image>
     <Url type="text/html" method="get" template="https://seekly.org/search?q={searchTerms}"/>
-    <Url type="application/x-suggestions+json" method="GET" template="https://seekly.org/suggest?q={searchTerms}">
+    <Url type="application/x-suggestions+json" method="GET" template="https://seekly.org/suggest/">
+        <Param name="q" value="{searchTerms}"/>
+    </Url>
 </OpenSearchDescription>
