@@ -419,7 +419,7 @@ async function requestListener(request, response) {
                                 "Access-Control-Allow-Origin": "*",
                                 "Content-Type": "application/json"
                             });
-                            response.end(JSON.stringify(resp));
+                            response.end(JSON.stringify([url.query.q, resp]));
                         }
                     })
                 } else {
