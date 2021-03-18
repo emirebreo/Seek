@@ -405,6 +405,32 @@ async function requestListener(request, response) {
                 }
             return;
 
+            case "suggest":
+                if (url.query.q) {
+                    bing.suggest(url.query.q, function(err, resp) {
+                        if (err) {
+                            response.writeHead(400, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Content-Type": "application/json"
+                            });
+                            response.end(JSON.stringify([]));
+                        } else {
+                            response.writeHead(200, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Content-Type": "application/json"
+                            });
+                            response.end(JSON.stringify(resp));
+                        }
+                    })
+                } else {
+                    response.writeHead(400, {
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Type": "application/json"
+                    });
+                    response.end(JSON.stringify([]));
+                }
+            return;
+
             default:
                 fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
                     if (err) {
