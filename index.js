@@ -411,13 +411,13 @@ async function requestListener(request, response) {
                         if (err) {
                             response.writeHead(400, {
                                 "Access-Control-Allow-Origin": "*",
-                                "Content-Type": "application/json"
+                                "Content-Type": "application/x-suggestions+json"
                             });
                             response.end(JSON.stringify([]));
                         } else {
                             response.writeHead(200, {
                                 "Access-Control-Allow-Origin": "*",
-                                "Content-Type": "application/json"
+                                "Content-Type": "application/x-suggestions+json"
                             });
                             response.end(JSON.stringify([url.query.q, resp]));
                         }
@@ -425,7 +425,7 @@ async function requestListener(request, response) {
                 } else {
                     response.writeHead(400, {
                         "Access-Control-Allow-Origin": "*",
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/x-suggestions+json"
                     });
                     response.end(JSON.stringify([]));
                 }
