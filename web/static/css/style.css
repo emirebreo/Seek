@@ -61,9 +61,12 @@ body {
     }
 }
 
-@media (max-height:250px) {
+@media (max-height:340px) {
     .footer {
       display: none;
+    }
+    .mid {
+        margin-top: 40px !important;
     }
 }
 
@@ -118,7 +121,6 @@ a:hover, a:focus {
 
 .mid {
     margin: 0 auto;
-    margin-top: 0px;
     margin-top: calc(50vh - 130px);
     width: 650px;
     max-width: 100%;
