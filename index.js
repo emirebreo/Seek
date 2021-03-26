@@ -464,6 +464,8 @@ function contentType(file) {
             return "image/png";
         case "gif":
             return "images/gif";
+        case "svg":
+            return "image/svg+xml";
         case "xml":
             return "application/xml";
         case "osxml":
