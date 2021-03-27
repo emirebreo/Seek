@@ -1,4 +1,4 @@
-# seekly
+![Seekly's logo](/web/static/seekly.svg)
 Seekly is a privacy oriented meta search engine, scraping from Bing.
 
 [Official Instance](https://seekly.org)
