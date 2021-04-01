@@ -2,7 +2,7 @@
 
 Seekly is a privacy oriented meta search engine, scraping from Bing.
 
-[Official Instance](https://seekly.org) (Alberta, Canada) | [Official Alternative Instance](https://ohio.seekly.org) (Ohio, USA) | [Official Heroku Instance](https://seekly.herokuapp.com) (Virginia, USA)
+[Official Instance](https://seekly.org) (Alberta, Canada) | [Official Heroku Instance](https://seekly.herokuapp.com) (Virginia, USA)
 
 You can also use the [cli version](https://github.com/normanlol/seekly-cli).
 
