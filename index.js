@@ -152,8 +152,8 @@ async function requestListener(request, response) {
 
                                             // weather adding
                                             if (
-                                                url.query.q.includes("weather in ") || 
-                                                url.query.q.includes("weather for ")
+                                                url.query.q.includes("weather in ") && !url.query.q.includes("my city") && !url.query.q.includes("my town") || 
+                                                url.query.q.includes("weather for ") && !url.query.q.includes("my city") && !url.query.q.includes("my town") 
                                             ) {
                                                 if (url.query.q.includes("weather in ")) {var splitString = "weather in ";}
                                                 if (url.query.q.includes("weather for ")) {var splitString = "weather for";}
@@ -166,6 +166,8 @@ async function requestListener(request, response) {
                                                 url.query.q.includes("weather near me") ||
                                                 url.query.q.includes("weather in my town") ||
                                                 url.query.q.includes("weather in my city") ||
+                                                url.query.q.includes("weather for my town") ||
+                                                url.query.q.includes("weather for my city") ||
                                                 url.query.q.includes("weather here") ||
                                                 url.query.q.includes("what is the weather") ||
                                                 url.query.q.includes("what's the weather") ||
