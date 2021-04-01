@@ -25,7 +25,7 @@ body {
     }
 }
 
-@media (max-width:430px) or (max-height:339px) {
+@media (max-width:430px) {
     .mid p {
         display:none;
     }
@@ -156,16 +156,16 @@ a:hover, a:focus {
 }
 
 #logo {
-  max-width: 100%;
-  max-height: 100px;
-  user-drag: none;
-  -webkit-user-drag: none;
-  user-select: none;
+    max-width: 100%;
+    max-height: 100px;
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
 }
 
 .logo #logo {
-  width: 90px;
-  height: 33px;
-  object-fit: cover;
-  overflow: hidden;
+    width: 90px;
+    height: 33px;
+    object-fit: cover;
+    overflow: hidden;
 }

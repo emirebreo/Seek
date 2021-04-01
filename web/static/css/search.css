@@ -290,7 +290,7 @@ button {
     color:var(--secondary-text-color) !important;
 }
 
-.topResult, .qnaResult {
+.topResult, .qnaResult, .weatherResult {
     background:var(--third-color);
 }
 
@@ -341,4 +341,15 @@ button {
     .header form {
         margin-left:10px;
     }
+}
+
+
+.weatherResult {
+    
+}
+
+.weather {
+    width:100%;
+    height:213px;
+    border:0;
 }

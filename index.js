@@ -5,7 +5,8 @@ const got = require("got");
 const cheerio = require("cheerio");
 const bing = require("bing-scraper");
 const faviconUrl = require("favicon-url");
-const port = process.env.PORT || 7070
+const lw = require("lycos-weather");
+const port = process.env.PORT || 7070;
 
 http.createServer(requestListener).listen(port);
 console.log("Server is listening on port " + port);
@@ -147,6 +148,19 @@ async function requestListener(request, response) {
                                                 }
                                             } else {
                                                 $(".carousel").remove();
+                                            }
+
+                                            // weather adding
+                                            if (url.query.q.includes("weather in my area")) {
+                                                var ww = `<div class='weatherResult result'><iframe scrolling='yes' class='weather' src='/weather'></iframe></div>`;
+                                                $(".results").append(ww);
+                                            } else if (url.query.q.includes("weather in ") || url.query.q.includes("weather for ")) {
+                                                if (url.query.q.includes("weather in ")) {var splitString = "weather in ";}
+                                                if (url.query.q.includes("weather for ")) {var splitString = "weather for";}
+                                                if (url.query.q.split(splitString).length > 1) {
+                                                    var ww = `<div class='weatherResult result'><iframe scrolling='yes' class='weather' src='/weather?q=${encodeURIComponent(url.query.q.split(splitString).slice(1).join(splitString))}'></iframe></div>`;
+                                                    $(".results").append(ww);
+                                                }
                                             }
 
                                             // sidebar adding
@@ -428,6 +442,88 @@ async function requestListener(request, response) {
                         "Content-Type": "application/x-suggestions+json"
                     });
                     response.end(JSON.stringify([]));
+                }
+            return;
+
+            case "weather":
+                if (!url.query.location && !url.query.q) {
+                    fs.readFile(__dirname + "/web/dynamic/weather/index.html", function(err, resp) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            response.writeHead(200, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Content-Type": "text/html"
+                            });
+                            response.end(resp);
+                        }
+                    });
+                } else if (url.query.q && !url.query.location) {
+                    lw.search(encodeURIComponent(url.query.q), function(err, w) {
+                        if (err) {
+                            if (err.code == "oneResult") {
+                                response.writeHead(302, {
+                                    "Access-Control-Allow-Origin": "*",
+                                    "Location": "/weather/?location=" + btoa(err.url) 
+                                });
+                                response.end();
+                                return;
+                            }
+                            handleError(request, response, err);
+                        } else {
+                            fs.readFile(__dirname + "/web/dynamic/weather/search.html", function(err, resp) {
+                                if (err) {
+                                    handleError(request, response, err);
+                                } else {
+                                    var $ = cheerio.load(resp);
+                                    for (var c in w) {
+                                        var d = `<a href='/weather/?location=${btoa(w[c].href)}'><div class='loc'><h3>${w[c].location}</h3></div></a>`;
+                                        $(".results").append(d);
+                                    }
+                                    response.writeHead(200, {
+                                        "Access-Control-Allow-Origin": "*",
+                                        "Content-Type": "text/html"
+                                    })
+                                    response.end($.html());
+                                }
+                            });
+                        }
+                    });
+                } else if (url.query.location) {
+                    lw.get(atob(url.query.location), function(err, w) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            fs.readFile(__dirname + "/web/dynamic/weather/location.html", function(err, resp) {
+                                if (err) {
+                                    handleError(request, response, err);
+                                } else {
+                                    var $ = cheerio.load(resp);
+                                    if (w.current.radarData) {
+                                        $(".bg img").attr("src", "/proxy/?url=" + btoa(w.current.radarData));
+                                    } else {
+                                        $(".bg").remove();
+                                    }
+                                    $(".location").text(w.location);
+                                    $(".temp").text(w.current.temp);
+                                    $(".high").text(w.current.highTemp);
+                                    $(".low").text(w.current.lowTemp);
+                                    $(".mes").text(w.mesaurement);
+                                    $(".ws").text(w.current.windSpeed);
+                                    $(".sr").text(w.current.sunrise);
+                                    $(".se").text(w.current.sunset);
+                                    $(".hu").text(w.current.humidity);
+                                    $(".vi").text(w.current.visibility);
+                                    $(".currDesc").text(w.current.description.toLowerCase());
+                                    response.writeHead(200, {
+                                        "Access-Control-Allow-Origin": "*",
+                                        "Content-Type": "text/html"
+                                    })
+                                    response.end($.html());
+                                }
+                            })
+                        }
+                    });
                 }
             return;
 

@@ -22,9 +22,10 @@
   },
   "homepage": "https://github.com/normanlol/seekly#readme",
   "dependencies": {
-    "bing-scraper": "^1.4.1",
+    "bing-scraper": "^1.4.3",
     "cheerio": "^1.0.0-rc.5",
     "favicon-url": "0.0.5",
-    "got": "^11.8.2"
+    "got": "^11.8.2",
+    "lycos-weather": "^1.0.2"
   }
 }
