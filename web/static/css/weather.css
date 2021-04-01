@@ -12,6 +12,7 @@ body {
     height:100%;
     word-break:break-word;
     margin:0;
+    overflow-y:scroll;
 }
 
 @media (prefers-color-scheme: dark) {
