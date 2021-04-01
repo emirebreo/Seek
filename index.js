@@ -151,16 +151,28 @@ async function requestListener(request, response) {
                                             }
 
                                             // weather adding
-                                            if (url.query.q.includes("weather in my area")) {
-                                                var ww = `<div class='weatherResult result'><iframe scrolling='yes' class='weather' src='/weather'></iframe></div>`;
-                                                $(".results").append(ww);
-                                            } else if (url.query.q.includes("weather in ") || url.query.q.includes("weather for ")) {
+                                            if (
+                                                url.query.q.includes("weather in ") || 
+                                                url.query.q.includes("weather for ")
+                                            ) {
                                                 if (url.query.q.includes("weather in ")) {var splitString = "weather in ";}
                                                 if (url.query.q.includes("weather for ")) {var splitString = "weather for";}
                                                 if (url.query.q.split(splitString).length > 1) {
                                                     var ww = `<div class='weatherResult result'><iframe scrolling='yes' class='weather' src='/weather?q=${encodeURIComponent(url.query.q.split(splitString).slice(1).join(splitString))}'></iframe></div>`;
                                                     $(".results").append(ww);
                                                 }
+                                            } else if (
+                                                url.query.q.includes("weather in my area") ||
+                                                url.query.q.includes("weather near me") ||
+                                                url.query.q.includes("weather in my town") ||
+                                                url.query.q.includes("weather in my city") ||
+                                                url.query.q.includes("weather here") ||
+                                                url.query.q.includes("what is the weather") ||
+                                                url.query.q.includes("what's the weather") ||
+                                                url.query.q.includes("whats the weather")
+                                            ) {
+                                                var ww = `<div class='weatherResult result'><iframe scrolling='yes' class='weather' src='/weather'></iframe></div>`;
+                                                $(".results").append(ww);
                                             }
 
                                             // sidebar adding
