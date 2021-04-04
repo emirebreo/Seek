@@ -385,7 +385,7 @@ async function requestListener(request, response) {
                     }).then(function(r) {
                         response.end(r.rawBody);
                     }).catch(function(e) {
-                        if (e.response.body) {
+                        if (e.response && e.response.body) {
                             response.end(e.response.rawBody);
                         } else {
                             response.end();
