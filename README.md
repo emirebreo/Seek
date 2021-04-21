@@ -11,5 +11,11 @@ You can also use the [cli version](https://github.com/normanlol/seekly-cli).
 - Scrapes from Bing on-demand.
 - Proxy (alpha) and easily look up archives of any result.
 
+## roadmap
+- Searching for videos, files, news and other catagories.
+- Faster load-time for results.
+- Server-side config for operators.
+- Improved error handling.
+
 ## credits
 - [hazycora](https://hazycora.com) has helped with a bit of both scraping and other aspects, she also made the logo and the favicon.
