@@ -80,6 +80,22 @@ async function requestListener(request, response) {
                                 if (err) {
                                     handleError(request, response, err);
                                 } else {
+                                    if (res.results.length == 0) {
+                                        fs.readFile(__dirname + "/web/dynamic/search/no-results/index.html", function(err, resp) {
+                                            if (err) {
+                                                handleError(request, response, err);
+                                            } else {
+                                                var $ = cheerio.load(resp);
+                                                $("#q").text(escapeHtml(url.query.q));
+                                                response.writeHead(200, {
+                                                    "Accept-Control-Allow-Origin": "*",
+                                                    "Content-Type": "text/html"
+                                                });
+                                                response.end($.html());
+                                            }
+                                        });
+                                        return;
+                                    }
                                     fs.readFile(__dirname + "/web/dynamic/search/index.html", function(err, resp) {
                                         if (err) {
                                             handleError(request, response, err);
@@ -90,13 +106,13 @@ async function requestListener(request, response) {
             
                                             // main result adding
                                             if (res.qnaAnswer !== null && res.qnaAnswer.answer !== "") {
-                                                var bChip = "<div class='qnaResult result'><p>" + escapeHtml(res.qnaAnswer.answer) + "</p><a class='resLink' href='" + escapeHtml(res.qnaAnswer.source.url) + "'><h2>" + escapeHtml(res.qnaAnswer.source.title) + "</h2><h4>" + escapeHtml(res.qnaAnswer.source.url) + "</h4></a></div>";
+                                                var bChip = "<div class='qnaResult dontPush result'><p>" + escapeHtml(res.qnaAnswer.answer) + "</p><a class='resLink' href='" + escapeHtml(res.qnaAnswer.source.url) + "'><h2>" + escapeHtml(res.qnaAnswer.source.title) + "</h2><h4>" + escapeHtml(res.qnaAnswer.source.url) + "</h4></a></div>";
                                                 $(".results").append(bChip);
                                             } else if (res.topAnswer !== null) {
                                                 if (res.topAnswer.image !== null) {
-                                                    var bChip = "<div class='topResult result'><img src='/proxy?url=" + btoa(res.topAnswer.image) + "'><div><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2><div></div>"
+                                                    var bChip = "<div class='topResult dontPush result'><img src='/proxy?url=" + btoa(res.topAnswer.image) + "'><div><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2><div></div>"
                                                 } else {
-                                                    var bChip = "<div class='topResult result'><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2></div>"
+                                                    var bChip = "<div class='topResult dontPush result'><h4>" + escapeHtml(res.topAnswer.title) + "</h4><h2>" + escapeHtml(res.topAnswer.answer) + "</h2></div>"
                                                 }
                                                 $(".results").append(bChip);
                                             }
@@ -152,16 +168,6 @@ async function requestListener(request, response) {
 
                                             // weather adding
                                             if (
-                                                url.query.q.includes("weather in ") && !url.query.q.includes("my city") && !url.query.q.includes("my town") || 
-                                                url.query.q.includes("weather for ") && !url.query.q.includes("my city") && !url.query.q.includes("my town") 
-                                            ) {
-                                                if (url.query.q.includes("weather in ")) {var splitString = "weather in ";}
-                                                if (url.query.q.includes("weather for ")) {var splitString = "weather for";}
-                                                if (url.query.q.split(splitString).length > 1) {
-                                                    var ww = `<div class='weatherResult result'><iframe scrolling='yes' class='weather' src='/weather?q=${encodeURIComponent(url.query.q.split(splitString).slice(1).join(splitString))}'></iframe></div>`;
-                                                    $(".results").append(ww);
-                                                }
-                                            } else if (
                                                 url.query.q.includes("weather in my area") ||
                                                 url.query.q.includes("weather near me") ||
                                                 url.query.q.includes("weather in my town") ||
@@ -173,8 +179,18 @@ async function requestListener(request, response) {
                                                 url.query.q.includes("what's the weather") ||
                                                 url.query.q.includes("whats the weather")
                                             ) {
-                                                var ww = `<div class='weatherResult result'><iframe scrolling='yes' class='weather' src='/weather'></iframe></div>`;
+                                                var ww = `<div class='weatherResult dontPush result'><iframe scrolling='yes' class='weather' src='/weather'></iframe></div>`;
                                                 $(".results").append(ww);
+                                            } else if (
+                                                url.query.q.includes("weather in ") && !url.query.q.includes("my city") && !url.query.q.includes("my town") || 
+                                                url.query.q.includes("weather for ") && !url.query.q.includes("my city") && !url.query.q.includes("my town") 
+                                            ) {
+                                                if (url.query.q.includes("weather in ")) {var splitString = "weather in ";}
+                                                if (url.query.q.includes("weather for ")) {var splitString = "weather for";}
+                                                if (url.query.q.split(splitString).length > 1) {
+                                                    var ww = `<div class='dontPush weatherResult result'><iframe scrolling='yes' class='weather' src='/weather?q=${encodeURIComponent(url.query.q.split(splitString).slice(1).join(splitString))}'></iframe></div>`;
+                                                    $(".results").append(ww);
+                                                }
                                             }
 
                                             // sidebar adding
@@ -595,8 +611,6 @@ function handleError(request, response, error) {
         else {var errTxt = error;}
         fs.readFile(__dirname + "/web/dynamic/error/index.html", function(err, resp) {
             if (err) {
-                console.log("there was an error reading the error html");
-                console.log(err);
                 response.writeHead(500, {
                     "Access-Control-Allow-Origin": "*",
                     "Content-Type": "text/plain"
@@ -615,8 +629,6 @@ function handleError(request, response, error) {
     } else {
         fs.readFile(__dirname + "/web/dynamic/error/unknown.html", function(err, resp) {
             if (err) {
-                console.log("there was an error reading the error html");
-                console.log(err);
                 response.writeHead(500, {
                     "Access-Control-Allow-Origin": "*",
                     "Content-Type": "text/plain"

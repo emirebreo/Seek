@@ -222,7 +222,7 @@ button {
 }
 
 .result:hover h2, .result:hover h4 {
-    text-decoration:underline !important;
+    text-decoration:underline;
     text-decoration-color:var(--text-color);
 }
 
@@ -345,7 +345,19 @@ button {
 
 
 .weatherResult {
-    
+    cursor:default !important;
+}
+
+.weatherResult *,
+.weatherResult *:focus,
+.weatherResult *:hover,
+.weatherResult *:focus-within {
+    text-decoration:none !important;
+    cursor:default !important;
+}
+
+.dontPush {
+    margin-bottom:0 !important;
 }
 
 .weather {

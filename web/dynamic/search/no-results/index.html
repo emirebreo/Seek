@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>temp</title>
+        <link href="/css/style.css" rel="stylesheet">
+        <link href="/css/search.css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="search" type="application/opensearchdescription+xml" title="Seekly" href="/opensearch.osxml">
+        <link rel="icon" href="/favicon.png">
+    </head>
+    <body>
+        <div class="header">
+            <a class="logo" href="/"><img src="/seekly.svg" id="logo" alt="Seekly" title="Seekly"></a>
+            <form method="GET">
+                <input id="searchBox" class="textBox" autocorrect="off" autocomplete="off" name="q" placeholder="Seek privately.">
+                <input class="subBox" type="submit" value="Seek">
+            </form>
+            <div class="tabParent tabActive" id="webTab"><button class="tab">web</button></div>
+            <a class="tabParent" id="imgTab"><button class="tab">images</button></a>
+        </div>
+        <div class="side"></div>
+        <div class="main">
+            <div class="results">
+                <div class="dontPush result weatherResult">
+                    <h2>No results.</h2>
+                    <p>Your query <b id="q"></b> did not get any results.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
