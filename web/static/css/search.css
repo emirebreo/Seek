@@ -373,6 +373,7 @@ button {
     height:65vh;
     max-height:500px;
     background:black;
+    margin-bottom:10px;
 }
 
 .embed::parent h3 {
