@@ -6,6 +6,7 @@ const cheerio = require("cheerio");
 const bing = require("bing-scraper");
 const faviconUrl = require("favicon-url");
 const lw = require("lycos-weather");
+const ytdl = require("ytdl-core");
 const port = process.env.PORT || 7070;
 
 http.createServer(requestListener).listen(port);
@@ -104,6 +105,18 @@ async function requestListener(request, response) {
                                             $('#searchBox').val(url.query.q);
                                             $("title").text("Results for \"" + url.query.q + "\" on Seekly");
             
+                                            // video adding
+                                            if (res.videoObject !== null && res.videoObject.url !== null && ytdl.validateURL(res.videoObject.url)) {
+                                                var ew = `
+                                                    <div class='dontPush widgetResult result'>
+                                                        <iframe scrolling='yes' class='widget embed' src='/embed?id=${ytdl.getURLVideoID(res.videoObject.url)}'></iframe>
+                                                        <h2>${res.videoObject.title}</h2>
+                                                        <p>${res.videoObject.meta}</p>
+                                                    </div>
+                                                `;
+                                                $(".results").append(ew);
+                                            }
+
                                             // main result adding
                                             if (res.qnaAnswer !== null && res.qnaAnswer.answer !== "") {
                                                 var bChip = "<div class='qnaResult dontPush result'><p>" + escapeHtml(res.qnaAnswer.answer) + "</p><a class='resLink' href='" + escapeHtml(res.qnaAnswer.source.url) + "'><h2>" + escapeHtml(res.qnaAnswer.source.title) + "</h2><h4>" + escapeHtml(res.qnaAnswer.source.url) + "</h4></a></div>";
@@ -179,7 +192,7 @@ async function requestListener(request, response) {
                                                 url.query.q.includes("what's the weather") ||
                                                 url.query.q.includes("whats the weather")
                                             ) {
-                                                var ww = `<div class='weatherResult dontPush result'><iframe scrolling='yes' class='weather' src='/weather'></iframe></div>`;
+                                                var ww = `<div class='widgetResult dontPush result'><iframe scrolling='yes' class='widget weather' src='/weather'></iframe></div>`;
                                                 $(".results").append(ww);
                                             } else if (
                                                 url.query.q.includes("weather in ") && !url.query.q.includes("my city") && !url.query.q.includes("my town") || 
@@ -188,7 +201,7 @@ async function requestListener(request, response) {
                                                 if (url.query.q.includes("weather in ")) {var splitString = "weather in ";}
                                                 if (url.query.q.includes("weather for ")) {var splitString = "weather for";}
                                                 if (url.query.q.split(splitString).length > 1) {
-                                                    var ww = `<div class='dontPush weatherResult result'><iframe scrolling='yes' class='weather' src='/weather?q=${encodeURIComponent(url.query.q.split(splitString).slice(1).join(splitString))}'></iframe></div>`;
+                                                    var ww = `<div class='dontPush widgetResult result'><iframe scrolling='yes' class='widget weather' src='/weather?q=${encodeURIComponent(url.query.q.split(splitString).slice(1).join(splitString))}'></iframe></div>`;
                                                     $(".results").append(ww);
                                                 }
                                             }
@@ -382,6 +395,45 @@ async function requestListener(request, response) {
                 }
             return;
 
+            case "embed":
+                if (url.query.id && !url.query.accept) {
+                    fs.readFile(__dirname + "/web/dynamic/embed/index.html", function(err, resp) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            var $ = cheerio.load(resp);
+                            $(".mainImg img").attr("src", "/proxy?url=" + btoa("https://i.ytimg.com/vi/" + url.query.id + "/hqdefault.jpg"));
+                            $("#ph").attr("href", "/embed?id=" + url.query.id + "&accept=true");
+                            $("#nt").attr("href", "https://youtube.com/watch?v=" + url.query.id);
+                            response.writeHead(200, {
+                                "Accept-Control-Allow-Origin": "*",
+                                "Content-Type": "text/html"
+                            });
+                            response.end($.html());
+                        }
+                    })
+                } else if (url.query.id && url.query.accept == "true") {
+                    response.writeHead(302, {
+                        "Access-Control-Allow-Origin": "*",
+                        "Location": "https://www.youtube-nocookie.com/embed/" + url.query.id,
+                        "Content-Type": "text/plain"
+                    });
+                    response.end("Please wait...");
+                } else {
+                    fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            response.writeHead(404, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Content-Type": "text/html"
+                            });
+                            response.end(resp);
+                        }
+                    });
+                }
+            return;
+
             case "proxy":
                 if (url.query.url) {
                     var pUrl = atob(url.query.url);
@@ -404,7 +456,7 @@ async function requestListener(request, response) {
                         if (e.response && e.response.body) {
                             response.end(e.response.rawBody);
                         } else {
-                            response.end();
+                            response.end(e.stack);
                         }
                     })
                 } else {

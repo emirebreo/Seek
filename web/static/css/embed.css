@@ -1,0 +1,30 @@
+body, html {
+    margin:0;
+    width:100%;
+    height:100%;
+}
+
+button {
+    height:8vh;
+    width:45vh
+}
+
+.main, .mainImg, .mainImg img {
+    width:100%;
+    height:100%;
+    position:absolute;
+}
+
+.mainImg img {
+    filter:blur(10px) brightness(50%);
+    -webkit-filter:blur(10px) brightness(50%);
+    object-fit:cover;
+}
+
+.mainImg {
+    z-index:9 !important;
+}
+
+.main {
+    z-index:99 !important;
+}

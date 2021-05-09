@@ -63,7 +63,7 @@ body {
 
 @media (max-height:339px) {
     .footer {
-      display: none;
+        display: none;
     }
     .mid {
         margin-top: 40px !important;
@@ -80,7 +80,6 @@ input {
 
 input:focus, .subBox:hover {
     color:var(--secondary-text-color);
-    /*background:var(--fourth-color);*/
     box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.3);
 }
 
