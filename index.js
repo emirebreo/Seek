@@ -321,11 +321,11 @@ async function requestListener(request, response) {
 
                         bing.imageSearch(object, function(err, resp) {
                             if (err) {
-                                handleError(err, request, response);
+                                handleError(request, response, err);
                             } else {
                                 fs.readFile(__dirname + "/web/dynamic/search/images/index.html", function(err, res) {
                                     if (err) {
-                                        handleError(err, request, response);
+                                        handleError(request, response, err);
                                     } else {
                                         var $ = cheerio.load(res);
                                         $('#searchBox').val(url.query.q);
