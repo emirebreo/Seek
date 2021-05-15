@@ -88,6 +88,8 @@ async function requestListener(request, response) {
                                             } else {
                                                 var $ = cheerio.load(resp);
                                                 $("#q").text(escapeHtml(url.query.q));
+                                                $('#searchBox').val(url.query.q);
+                                                $("title").text("Results for \"" + url.query.q + "\" on Seekly");
                                                 response.writeHead(200, {
                                                     "Accept-Control-Allow-Origin": "*",
                                                     "Content-Type": "text/html"
@@ -323,6 +325,24 @@ async function requestListener(request, response) {
                             if (err) {
                                 handleError(request, response, err);
                             } else {
+                                if (resp.results.length == 0) {
+                                    fs.readFile(__dirname + "/web/dynamic/search/no-results/index.html", function(err, res) {
+                                        if (err) {
+                                            handleError(request, response, err);
+                                        } else {
+                                            var $ = cheerio.load(res);
+                                            $("#q").text(escapeHtml(url.query.q));
+                                            $('#searchBox').val(url.query.q);
+                                            $("title").text("Results for \"" + url.query.q + "\" on Seekly");
+                                            response.writeHead(200, {
+                                                "Accept-Control-Allow-Origin": "*",
+                                                "Content-Type": "text/html"
+                                            });
+                                            response.end($.html());
+                                        }
+                                    });
+                                    return;
+                                }
                                 fs.readFile(__dirname + "/web/dynamic/search/images/index.html", function(err, res) {
                                     if (err) {
                                         handleError(request, response, err);
