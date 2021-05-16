@@ -4,7 +4,7 @@ const { parse } = require("url");
 const got = require("got");
 const cheerio = require("cheerio");
 const bing = require("bing-scraper");
-const faviconUrl = require("favicon-url");
+const fv = require("retrieve-favicon");
 const lw = require("lycos-weather");
 const ytdl = require("ytdl-core");
 const port = process.env.PORT || 7070;
@@ -117,6 +117,15 @@ async function requestListener(request, response) {
                                                     </div>
                                                 `;
                                                 $(".results").append(ew);
+                                            }
+
+                                            // dym adding
+                                            if (res.didyoumean !== null) {
+                                                $(".dym").attr("href", "/search?q=" + encodeURIComponent(res.didyoumean.query));
+                                                $(".dym").text(res.didyoumean.query);
+                                                $(".results").attr("style", "padding-top:10px !important;")
+                                            } else {
+                                                $(".dymCont").remove();
                                             }
 
                                             // main result adding
@@ -372,8 +381,6 @@ async function requestListener(request, response) {
                                                     $("#splitC").append(chip);
                                                 } else if (a == "6") {
                                                     $("#splitD").append(chip);
-                                                } else if (a == "8") {
-                                                    $("#splitE").append(chip);
                                                 } else {
                                                     $("#splitA").append(chip);
                                                 }
@@ -457,9 +464,20 @@ async function requestListener(request, response) {
             case "proxy":
                 if (url.query.url) {
                     var pUrl = atob(url.query.url);
+                    if (!pUrl.startsWith("http://") && !pUrl.startsWith("https://")) { pUrl = "http://" + pUrl; }
                     var pUrlp = parse(pUrl, true);
-                    got(pUrl, {
-                        headers: {
+                    if (!url.query.favicon) {
+                        var hdr = {
+                            "Accept-Encoding": "gzip,deflate,br",
+                            "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+                            "From": "googlebot(at)googlebot.com",
+                            "Accept": "text/html,application/xhtml,application/xml;q=0.9,*/*,q=0.8",
+                            "Connection": "close",
+                            "Cache-Control": "no-cache",
+                            "Accept-Language": "en-US"
+                        };
+                    } else {
+                        var hdr = {
                             "Host": pUrlp.host,
                             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0",
                             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -469,8 +487,19 @@ async function requestListener(request, response) {
                             "Connection": "keep-alive",
                             "Upgrade-Insecure-Requests": "1",
                             "Sec-GPC": "1"
-                        }
+                        };
+                    }
+                    got(pUrl, {
+                        headers: hdr
                     }).then(function(r) {
+                        if (url.query.favicon) {
+                            if (!r.headers["content-type"].startsWith("image/")) {
+                                response.writeHead(302, {
+                                    "Access-Control-Allow-Origin": "*",
+                                    "Location": "/globe.png"
+                                });
+                            }
+                        }
                         response.end(r.rawBody);
                     }).catch(function(e) {
                         if (e.response && e.response.body) {
@@ -496,22 +525,39 @@ async function requestListener(request, response) {
 
             case "favicon":
                 if (url.query.link) {
-                    var host = parse(atob(url.query.link), true).host;
-                    faviconUrl(host, {timeout: 2000}, function(favicon) {
-                        if (favicon !== null) {
-                            response.writeHead(302, {
-                                "Access-Control-Allow-Origin": "*",
-                                "Location": "/proxy/?url=" + btoa(favicon)
+                    fv.isIco(atob(url.query.link), function(err, resp) {
+                        if (resp !== true) {
+                            fv.get(atob(url.query.link), function(err, resp) {
+                                if (err) {
+                                    response.writeHead(302, {
+                                        "Access-Control-Allow-Origin": "*",
+                                        "Location": "/globe.png"
+                                    });
+                                    response.end();
+                                } else {
+                                    if (resp[0]) {
+                                        response.writeHead(302, {
+                                            "Access-Control-Allow-Origin": "*",
+                                            "Location": "/proxy?url=" + btoa(resp[0]) + "&favicon=true"
+                                        });
+                                        response.end();
+                                    } else {
+                                        response.writeHead(302, {
+                                            "Access-Control-Allow-Origin": "*",
+                                            "Location": "/globe.png"
+                                        });
+                                        response.end();
+                                    }
+                                }
                             })
-                            response.end();
                         } else {
                             response.writeHead(302, {
                                 "Access-Control-Allow-Origin": "*",
-                                "Location": "/globe.png"
+                                "Location": "/proxy?url=" + btoa("http://" + parse(atob(url.query.link)).host + "/favicon.ico") + "&favicon=true"
                             })
                             response.end();
                         }
-                    })
+                    });
                 } else {
                     response.writeHead(302, {
                         "Access-Control-Allow-Origin": "*",

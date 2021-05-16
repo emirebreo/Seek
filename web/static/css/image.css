@@ -59,6 +59,10 @@ button {
     width:100%;
 }
 
+.dymCont {
+    margin:10px;
+}
+
 .textBox, .subBox {
     margin-top:5px !important;
     margin-right:5px;
@@ -66,7 +70,7 @@ button {
 
 @media (min-width:960px) {
     .split {
-        width:18%;
+        width:23%;
         float:left;
         padding:0.5%;
     }

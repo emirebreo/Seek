@@ -60,6 +60,10 @@ button {
     margin-right:5px;
 }
 
+.dymCont {
+    margin:10px;
+}
+
 @media (min-width:1370px) {
     .main {
         max-width:930px;

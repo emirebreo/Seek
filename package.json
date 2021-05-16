@@ -22,12 +22,14 @@
   },
   "homepage": "https://github.com/normanlol/seekly#readme",
   "dependencies": {
+    "@astridhq/fetch-favicon": "*",
     "bing-scraper": "^1.4.6",
     "cheerio": "^1.0.0-rc.5",
     "deezer-public-api": "^1.0.4",
-    "favicon-url": "0.0.5",
     "got": "^11.8.2",
     "lycos-weather": "^1.0.2",
+    "retrieve-favicon": "^1.0.3-fix",
+    "website-logo": "^2.0.0",
     "ytdl-core": "^4.7.0"
   }
 }
