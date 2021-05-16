@@ -493,7 +493,7 @@ async function requestListener(request, response) {
                         headers: hdr
                     }).then(function(r) {
                         if (url.query.favicon) {
-                            if (!r.headers["content-type"].startsWith("image/")) {
+                            if (!r.headers["content-type"].startsWith("image/") && r.headers["content-type"] !== "image/svg+xml" && r.headers["content-type"] !== "image/svg") {
                                 response.writeHead(302, {
                                     "Access-Control-Allow-Origin": "*",
                                     "Location": "/globe.png"
