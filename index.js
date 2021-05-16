@@ -466,7 +466,7 @@ async function requestListener(request, response) {
                     var pUrl = atob(url.query.url);
                     if (!pUrl.startsWith("http://") && !pUrl.startsWith("https://")) { pUrl = "http://" + pUrl; }
                     var pUrlp = parse(pUrl, true);
-                    if (!url.query.favicon) {
+                    if (url.query.favicon) {
                         var hdr = {
                             "Accept-Encoding": "gzip,deflate,br",
                             "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
