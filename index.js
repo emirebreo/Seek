@@ -465,6 +465,14 @@ async function requestListener(request, response) {
                 if (url.query.url) {
                     var pUrl = atob(url.query.url);
                     if (!pUrl.startsWith("http://") && !pUrl.startsWith("https://")) { pUrl = "http://" + pUrl; }
+                    if (pUrl.substring(pUrl.length - 3, pUrl.length) == "svg" && url.query.favicon) {
+                        response.writeHead(302, {
+                            "Access-Control-Allow-Origin": "*",
+                            "Location": "/globe.png"
+                        });
+                        response.end();
+                        return;
+                    }
                     var pUrlp = parse(pUrl, true);
                     if (url.query.favicon) {
                         var hdr = {
@@ -498,6 +506,8 @@ async function requestListener(request, response) {
                                     "Access-Control-Allow-Origin": "*",
                                     "Location": "/globe.png"
                                 });
+                                response.end();
+                                return;
                             }
                         }
                         response.end(r.rawBody);
