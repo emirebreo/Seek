@@ -388,7 +388,7 @@ async function requestListener(request, response) {
                                         }
 
                                         // add next page
-                                        if (resp.nextHref !== null) {
+                                        if (resp.nextHref !== null && resp.nextHref !== undefined) {
                                             $("#more").attr("href",  "/search/images?q=" + url.query.q + "&scrape=" + btoa(resp.nextHref) + "&cookies=" + btoa(cook));
                                         } else {
                                             $("#more").remove();
@@ -501,7 +501,11 @@ async function requestListener(request, response) {
                         headers: hdr
                     }).then(function(r) {
                         if (url.query.favicon) {
-                            if (!r.headers["content-type"].startsWith("image/") && r.headers["content-type"] !== "image/svg+xml" && r.headers["content-type"] !== "image/svg") {
+                            if (
+                                !r.headers["content-type"].startsWith("image/") && 
+                                r.headers["content-type"] !== "image/svg+xml" && 
+                                r.headers["content-type"] !== "image/svg"
+                            ) {
                                 response.writeHead(302, {
                                     "Access-Control-Allow-Origin": "*",
                                     "Location": "/globe.png"
