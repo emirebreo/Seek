@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/normanlol/seekly#readme",
   "dependencies": {
-    "@astridhq/fetch-favicon": "*",
     "bing-scraper": "^1.4.6",
     "cheerio": "^1.0.0-rc.5",
     "deezer-public-api": "^1.0.4",
