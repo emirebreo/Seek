@@ -140,6 +140,7 @@ button {
     max-width:900px;
     max-height:35px;
     overflow-x:scroll;
+    overflow-y:hidden;
     white-space:nowrap;
     padding-bottom:15px;
 }
@@ -386,4 +387,12 @@ button {
 
 .embed::parent {
     height:545px !important; 
+}
+
+.definition {
+    height:300px;
+}
+
+.definition::parent {
+    height:300px !important;
 }

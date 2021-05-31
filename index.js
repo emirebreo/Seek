@@ -7,6 +7,8 @@ const bing = require("bing-scraper");
 const fv = require("retrieve-favicon");
 const lw = require("lycos-weather");
 const ytdl = require("ytdl-core");
+const ftl = require("findthelyrics");
+const lex = require("lexico-dictionary");
 const port = process.env.PORT || 7070;
 
 http.createServer(requestListener).listen(port);
@@ -106,7 +108,20 @@ async function requestListener(request, response) {
                                             var $ = cheerio.load(resp);
                                             $('#searchBox').val(url.query.q);
                                             $("title").text("Results for \"" + url.query.q + "\" on Seekly");
-            
+                                            
+                                            // definition adding
+                                            if (
+                                                url.query.q.includes("definition") ||
+                                                url.query.q.includes("meaning")
+                                            ) {
+                                                var d = `
+                                                    <div class='dontPush widgetResult result'>
+                                                        <iframe scrolling='yes' class='widget definition' src='/dict?w=${url.query.q}'></iframe>
+                                                    </div>
+                                                `;
+                                                $(".results").append(d);
+                                            }
+
                                             // video adding
                                             if (res.videoObject !== null && res.videoObject.url !== null && ytdl.validateURL(res.videoObject.url)) {
                                                 var ew = `
@@ -541,29 +556,11 @@ async function requestListener(request, response) {
                 if (url.query.link) {
                     fv.isIco(atob(url.query.link), function(err, resp) {
                         if (resp !== true) {
-                            fv.get(atob(url.query.link), function(err, resp) {
-                                if (err) {
-                                    response.writeHead(302, {
-                                        "Access-Control-Allow-Origin": "*",
-                                        "Location": "/globe.png"
-                                    });
-                                    response.end();
-                                } else {
-                                    if (resp[0]) {
-                                        response.writeHead(302, {
-                                            "Access-Control-Allow-Origin": "*",
-                                            "Location": "/proxy?url=" + btoa(resp[0]) + "&favicon=true"
-                                        });
-                                        response.end();
-                                    } else {
-                                        response.writeHead(302, {
-                                            "Access-Control-Allow-Origin": "*",
-                                            "Location": "/globe.png"
-                                        });
-                                        response.end();
-                                    }
-                                }
-                            })
+                            response.writeHead(302, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Location": "/globe.png"
+                            });
+                            response.end();
                         } else {
                             response.writeHead(302, {
                                 "Access-Control-Allow-Origin": "*",
@@ -604,6 +601,67 @@ async function requestListener(request, response) {
                         "Content-Type": "application/x-suggestions+json"
                     });
                     response.end(JSON.stringify([]));
+                }
+            return;
+
+            case "dict":
+                if (url.query.w) {
+                    fs.readFile(__dirname + "/web/dynamic/dict/index.html", function(err, resp) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            var $ = cheerio.load(resp);
+                            if (url.query.w.includes("definition") || !url.query.w.includes("definition of")) {var q = url.query.w.split("definition").join("");}
+                            else if (url.query.w.includes("definition of")) {var q = url.query.w.split("definition of").join("");}
+                            else if (url.query.w.includes("meaning") || !url.query.w.includes("meaning of")) {var q = url.query.w.split("meaning").join("");}
+                            else if (url.query.w.includes("meaning of")) {var q = url.query.w.split("meaning of").join("");}
+                            if (!q) {var q = url.query.q;} else {q.split(" ").join("");}
+                            lex.search(q).then(function(res) {
+                                $(".word").text(q);
+                                $(".pos").text(res.pos);
+                                for (var c in res.meanings) {
+                                    var m = `<li>${res.meanings[c].value} `;
+                                    if (res.meanings[c].type !== "n/a") {m = m + "(<b class='typeMeaning'>" + res.meanings[c].type + "</b>)</li>"} else {m = m +"</li>"}
+                                    $("#defs").append(m);
+                                }
+                                $(".origin").text(res.origin);
+                                $(".site").attr("href", res.url);
+                                response.writeHead(200, {
+                                    "Access-Control-Allow-Origin": "*",
+                                    "Content-Type": "text/html"
+                                })
+                                response.end($.html());
+                            }).catch(function(err) {
+                                if (err.message == "Request failed with status code 404") {
+                                    fs.readFile(__dirname + "/web/dynamic/dict/nores.html", function(err, resp) {
+                                        if (err) {
+                                            handleError(request, response, err);
+                                        } else {
+                                            response.writeHead(404, {
+                                                "Access-Control-Allow-Origin": "*",
+                                                "Content-Type": "text/html"
+                                            })
+                                            response.end(resp);
+                                        }
+                                    })
+                                } else {
+                                    handleError(request, response, err);
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            response.writeHead(404, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Content-Type": "text/html"
+                            });
+                            response.end(resp);
+                        }
+                    });
                 }
             return;
 
@@ -684,6 +742,18 @@ async function requestListener(request, response) {
                                     response.end($.html());
                                 }
                             })
+                        }
+                    });
+                } else {
+                    fs.readFile(__dirname + "/web/dynamic/error/404.html", function(err, resp) {
+                        if (err) {
+                            handleError(request, response, err);
+                        } else {
+                            response.writeHead(404, {
+                                "Access-Control-Allow-Origin": "*",
+                                "Content-Type": "text/html"
+                            });
+                            response.end(resp);
                         }
                     });
                 }

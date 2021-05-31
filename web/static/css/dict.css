@@ -1,0 +1,51 @@
+.word, .posCon {
+    float:left;
+}
+
+.word {
+    margin-top:0;
+    margin-bottom:0;
+    margin-left:5px;
+    margin-right:7.5px;
+    font-size:1.6em;
+}
+
+.info {
+    margin-left:5px;
+    margin-right:5px;
+    margin-top:7.5px;
+    color:var(--secondary-text-color);
+}
+
+.w, .def, .bottom {
+    width:100%;
+}
+
+.def h2 {
+    margin-top:0.4em;
+    margin-bottom:0.4em;
+    margin-left:5px;
+}
+
+.def li {
+    margin-bottom:5px;
+}
+
+.w {
+    height:30px;
+}
+
+.pos {
+    color:var(--secondary-text-color);
+}
+
+.posCon {
+    background:var(--third-color);
+    padding:0.2em;
+    border-radius:0.15em;
+}
+
+.posCon h2 {
+    font-size:1.25em;
+    margin:0;
+}
