@@ -397,14 +397,14 @@ async function requestListener(request, response) {
                                                 } else if (a == "6") {
                                                     $("#splitD").append(chip);
                                                 } else {
-                                                    $("#splitA").append(chip);
+                                                    $("#splitE").append(chip);
                                                 }
                                             }
                                         }
 
                                         // add next page
-                                        if (resp.nextHref !== null && resp.nextHref !== undefined) {
-                                            $("#more").attr("href",  "/search/images?q=" + url.query.q + "&scrape=" + btoa(resp.nextHref) + "&cookies=" + btoa(cook));
+                                        if (resp.nextUrl !== null && resp.nextUrl !== undefined) {
+                                            $("#more").attr("href",  "/search/images?q=" + url.query.q + "&scrape=" + btoa(resp.nextUrl) + "&cookies=" + btoa(cook));
                                         } else {
                                             $("#more").remove();
                                         }
@@ -853,6 +853,11 @@ function btoa(string) {
 
 function atob(string) {
     return Buffer.from(string, "base64").toString("utf-8");
+}
+
+function mkLnk(t) {
+    var replacePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+	return t.replace(replacePattern, '<a href="$1">$1</a>');
 }
 
 function escapeHtml(unsafe) {
